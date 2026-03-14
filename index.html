@@ -10,17 +10,21 @@
         body { background-color: #000000; color: #ffffff; margin: 0; overflow-x: hidden; }
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 25px rgba(20, 241, 149, 0.1); }
         .font-vision { font-family: 'Space Grotesk', sans-serif; }
-        /* Container per il bypass */
-        .terminal-wrapper {
+        
+        .terminal-container {
             width: 100%;
             height: 600px;
             background: #000;
             position: relative;
+            overflow: hidden;
         }
+        
         iframe {
             width: 100%;
             height: 100%;
             border: none;
+            /* Rende l'integrazione più fluida */
+            color-scheme: dark;
         }
     </style>
 </head>
@@ -28,12 +32,12 @@
 
     <header class="mb-10 text-center">
         <h1 class="text-5xl font-black font-vision tracking-tighter uppercase italic text-emerald-400 italic">$WAVE MOTOR</h1>
-        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Neural Interface - Forced Link</p>
+        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Neural Interface - Forced Link Active</p>
     </header>
 
     <main class="w-full max-w-md">
         <div class="neon-border rounded-3xl overflow-hidden bg-black">
-            <div class="terminal-wrapper">
+            <div class="terminal-container">
                 <iframe 
                     src="https://jup.ag/swap/SOL-2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump?embed=true" 
                     title="Jupiter Swap">
@@ -45,11 +49,14 @@
              <a href="https://dub.sh/WAVEPortal" class="flex items-center justify-center w-full py-4 bg-white text-black font-black rounded-xl hover:bg-emerald-400 transition-all uppercase text-sm tracking-tighter">
                 Enter the Neural Portal (TG)
             </a>
+            <div class="text-center opacity-30 text-[9px] uppercase tracking-widest">
+                Connected to Helius High-Speed RPC
+            </div>
         </div>
     </main>
 
-    <footer class="mt-12 opacity-20 text-[9px] uppercase tracking-[0.5em]">
-        Status: Operating in Forced Bypass Mode
+    <footer class="mt-12 text-center">
+        <p class="text-gray-500 text-[10px] uppercase tracking-widest italic">"Solana above Solana"</p>
     </footer>
 
 </body>
