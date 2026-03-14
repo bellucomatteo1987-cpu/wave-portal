@@ -3,50 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$WAVE | Solana-based Neural Engine </title>
+    <title>$WAVE | Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://terminal.jup.ag/main-v3.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    
+    <script src="https://terminal.jup.ag/main-v3.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
-        .font-vision { font-family: 'Space Grotesk', sans-serif; }
-        .neon-border { box-shadow: 0 0 15px rgba(20, 241, 149, 0.2); border: 1px solid rgba(20, 241, 149, 0.4); }
-        .glow-text { text-shadow: 0 0 10px rgba(153, 69, 255, 0.8); }
-        .gradient-bg { background: linear-gradient(180deg, #050505 0%, #0a0a0a 100%); }
-        /* Forza l'altezza per evitare il rettangolo vuoto */
+        body { background-color: #050505; color: #ffffff; font-family: 'Inter', sans-serif; }
+        .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 20px rgba(20, 241, 149, 0.1); }
+        /* Placeholder visibile per debug */
         #integrated-terminal { 
             width: 100%; 
             min-height: 520px; 
-            background: rgba(255,255,255,0.02);
-            border-radius: 12px;
+            background: rgba(255,255,255,0.01);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
-<body class="gradient-bg min-h-screen flex flex-col items-center px-6 py-12">
+<body class="min-h-screen flex flex-col items-center py-12 px-4">
 
-    <header class="text-center mb-16">
-        <h1 class="text-6xl font-black font-vision tracking-tighter glow-text uppercase">$WAVE</h1>
-        <p class="text-emerald-400 font-bold tracking-widest mt-2 uppercase text-sm">Neural Motor Active</p>
+    <header class="mb-12 text-center">
+        <h1 style="font-family: 'Space Grotesk';" class="text-5xl font-black tracking-tighter uppercase italic text-emerald-400">$WAVE MOTOR</h1>
+        <p class="text-xs tracking-[0.3em] text-white/40 mt-2 uppercase text-center">Neural Deployment Interface</p>
     </header>
 
-    <main class="max-w-2xl w-full space-y-8 mb-16">
-        
-        <section class="bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm neon-border">
-            <h2 class="text-xl font-bold mb-6 text-emerald-400 font-vision uppercase tracking-tight text-center">One-Click Deployment</h2>
-            <div id="integrated-terminal"></div>
-        </section>
+    <main class="w-full max-w-md">
+        <div class="neon-border rounded-3xl overflow-hidden bg-black">
+            <div id="integrated-terminal">
+                <div id="loading-text" class="text-white/20 animate-pulse uppercase text-xs font-bold">
+                    Initializing Secure Link...
+                </div>
+            </div>
+        </div>
 
-        <section class="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-sm">
-            <h2 class="text-2xl font-bold mb-4 text-purple-500 font-vision uppercase tracking-tight">The Mission</h2>
-            <p class="text-gray-300 leading-relaxed text-lg">
-                Intelligence meets Geopolitical Strategy. We act in less than 60 seconds.
-            </p>
-        </section>
+        <button onclick="launchJupiter()" class="w-full mt-6 py-2 text-[10px] text-white/20 uppercase tracking-widest hover:text-emerald-400 transition-all">
+            In caso di errore: Forza ricarica motore
+        </button>
     </main>
 
     <script>
         function launchJupiter() {
+            const container = document.getElementById('integrated-terminal');
             if (window.Jupiter) {
+                // Rimuove il testo di caricamento se presente
+                const loading = document.getElementById('loading-text');
+                if(loading) loading.style.display = 'none';
+
                 window.Jupiter.init({
                     displayMode: "integrated",
                     integratedTargetId: "integrated-terminal",
@@ -54,16 +59,18 @@
                     strictTokenList: false,
                     formProps: {
                         fixedOutputMint: true,
-                        initialOutputMint: "IL_TUO_CONTRATTO_WAVE",
+                        initialOutputMint: "INSERISCI_QUI_IL_TUO_CONTRATTO_WAVE",
                     },
                 });
+                console.log("Jupiter inizializzato correttamente.");
             } else {
-                // Se non è pronto, riprova tra 500ms
-                setTimeout(launchJupiter, 500);
+                console.log("Script Jupiter non ancora pronto...");
+                setTimeout(launchJupiter, 1000);
             }
         }
-        // Avvia il check al caricamento
-        window.addEventListener('load', launchJupiter);
+
+        // Tenta l'avvio dopo 1 secondo per dare tempo al DOM
+        setTimeout(launchJupiter, 1000);
     </script>
 </body>
 </html>
