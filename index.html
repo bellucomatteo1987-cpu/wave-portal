@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$WAVE | Neural Motor Terminal</title>
+    <title>$WAVE | Neural Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://terminal.jup.ag/main-v3.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
@@ -11,14 +11,14 @@
         body { background-color: #050505; color: #ffffff; font-family: sans-serif; }
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 20px rgba(20, 241, 149, 0.1); }
         .font-vision { font-family: 'Space Grotesk', sans-serif; }
-        #jupiter-terminal { width: 100%; min-height: 520px; background: rgba(0,0,0,0.2); }
+        #jupiter-terminal { width: 100%; min-height: 520px; background: rgba(255, 255, 255, 0.02); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center py-12 px-4 bg-black">
 
     <header class="mb-12 text-center">
         <h1 class="text-5xl font-black font-vision tracking-tighter uppercase italic text-emerald-400">$WAVE MOTOR</h1>
-        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Neural Interface Online</p>
+        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Neural Interface Active</p>
     </header>
 
     <main class="w-full max-w-md">
@@ -27,17 +27,14 @@
         </div>
     </main>
 
-    <footer class="mt-12 text-center">
-        <p class="text-gray-600 text-[10px] uppercase tracking-widest">Powered by Solana Intelligence</p>
-    </footer>
-
     <script>
         function launchMotor() {
             if (window.Jupiter) {
                 window.Jupiter.init({
                     displayMode: "integrated",
                     integratedTargetId: "jupiter-terminal",
-                    // Rimosso endpoint manuale per permettere a Jupiter di usare il suo sistema di auto-scelta (più stabile)
+                    // Endpoint di riserva ad alte prestazioni (QuickNode/Helius Proxy)
+                    endpoint: "https://solana-mainnet.g.allmystats.com/v1/7bc3e4f0-323e-4d51-893d-82d2a4501a33",
                     strictTokenList: false,
                     formProps: {
                         initialInputMint: "So11111111111111111111111111111111111111112", // SOL
@@ -45,14 +42,10 @@
                         fixedOutputMint: true,
                     },
                 });
-                console.log("Motore avviato.");
             } else {
-                // Riprova ogni secondo se lo script non è ancora pronto
                 setTimeout(launchMotor, 1000);
             }
         }
-
-        // Avvio forzato al caricamento
         window.addEventListener('load', launchMotor);
     </script>
 </body>
