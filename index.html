@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$WAVE | Neural Portal</title>
+    <title>$WAVE | Neural Motor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://terminal.jup.ag/main-v3.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #050505; color: #ffffff; font-family: sans-serif; }
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 20px rgba(20, 241, 149, 0.1); }
-        .font-vision { font-family: 'Space Grotesk', sans-serif; }
         #jupiter-terminal { width: 100%; min-height: 520px; background: rgba(255, 255, 255, 0.02); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center py-12 px-4 bg-black">
 
     <header class="mb-12 text-center">
-        <h1 class="text-5xl font-black font-vision tracking-tighter uppercase italic text-emerald-400">$WAVE MOTOR</h1>
-        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Neural Interface Active</p>
+        <h1 style="font-family: 'Space Grotesk';" class="text-5xl font-black tracking-tighter uppercase italic text-emerald-400">$WAVE MOTOR</h1>
+        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase underline">Secure Deployment Console</p>
     </header>
 
     <main class="w-full max-w-md">
@@ -33,8 +32,7 @@
                 window.Jupiter.init({
                     displayMode: "integrated",
                     integratedTargetId: "jupiter-terminal",
-                    // Endpoint di riserva ad alte prestazioni (QuickNode/Helius Proxy)
-                    endpoint: "https://solana-mainnet.g.allmystats.com/v1/7bc3e4f0-323e-4d51-893d-82d2a4501a33",
+                    // LASCIAMO CHE JUPITER SCELGA L'RPC MIGLIORE AUTOMATICAMENTE
                     strictTokenList: false,
                     formProps: {
                         initialInputMint: "So11111111111111111111111111111111111111112", // SOL
@@ -43,9 +41,12 @@
                     },
                 });
             } else {
+                // Riprova se lo script non è ancora caricato
                 setTimeout(launchMotor, 1000);
             }
         }
+        
+        // Avvia il caricamento quando la pagina è pronta
         window.addEventListener('load', launchMotor);
     </script>
 </body>
