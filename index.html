@@ -3,59 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$WAVE | Terminal</title>
+    <title>$WAVE | Neural Motor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000000; color: #ffffff; margin: 0; overflow-x: hidden; }
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 25px rgba(20, 241, 149, 0.1); }
         .font-vision { font-family: 'Space Grotesk', sans-serif; }
-        
-        .terminal-container {
-            width: 100%;
-            height: 600px;
-            background: #000;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            color-scheme: dark;
-        }
+        .terminal-container { width: 100%; height: 580px; background: #000; overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; color-scheme: dark; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center py-12 px-4">
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
 
-    <header class="mb-10 text-center">
-        <h1 class="text-5xl font-black font-vision tracking-tighter uppercase italic text-emerald-400">$WAVE MOTOR</h1>
-        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Neural Interface - Forced Link Active</p>
+    <header class="mb-8 text-center">
+        <h1 class="text-5xl font-black font-vision tracking-tighter uppercase italic text-emerald-400 italic">$WAVE MOTOR</h1>
+        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase italic">Neural Interface - High Priority Link</p>
     </header>
 
-    <main class="w-full max-w-md">
+    <main class="w-full max-w-md space-y-6">
         <div class="neon-border rounded-3xl overflow-hidden bg-black">
             <div class="terminal-container">
                 <iframe 
-                    src="https://jup.ag/swap/SOL-2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump?embed=true" 
+                    src="https://jup.ag/swap/SOL-2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump?inputMint=So11111111111111111111111111111111111111112&outputMint=2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump&embed=true" 
                     title="Jupiter Swap">
                 </iframe>
             </div>
         </div>
 
-        <div class="mt-8 space-y-4">
-             <a href="https://dub.sh/WAVEPortal" class="flex items-center justify-center w-full py-4 bg-white text-black font-black rounded-xl hover:bg-emerald-400 transition-all uppercase text-sm tracking-tighter">
-                Enter the Neural Portal (TG)
-            </a>
-            <div class="text-center opacity-30 text-[9px] uppercase tracking-widest">
-                Direct Neural Bridge Established
-            </div>
+        <div class="bg-white/5 border border-white/10 p-4 rounded-xl flex justify-between items-center group">
+            <code class="text-[10px] text-emerald-400/70 truncate mr-4">2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump</code>
+            <button onclick="navigator.clipboard.writeText('2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump')" class="text-[10px] uppercase font-bold bg-emerald-400 text-black px-3 py-1 rounded hover:bg-white transition-colors">Copy CA</button>
         </div>
+
+        <a href="https://dub.sh/WAVEPortal" class="flex items-center justify-center w-full py-4 bg-white text-black font-black rounded-xl hover:bg-emerald-400 transition-all uppercase text-sm tracking-tighter">
+            Join the Neural Portal
+        </a>
     </main>
 
-    <footer class="mt-12 text-center">
-        <p class="text-gray-500 text-[10px] uppercase tracking-widest italic">"Solana above Solana"</p>
+    <footer class="mt-10 opacity-20 text-[9px] uppercase tracking-[0.5em] text-center">
+        Motor Status: Online<br>
+        Pair: SOL / $WAVE
     </footer>
 
 </body>
