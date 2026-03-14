@@ -1,24 +1,69 @@
-<section class="bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm neon-border">
-    <h2 class="text-xl font-bold mb-4 text-emerald-400 font-vision uppercase tracking-tight text-center">One-Click Deployment</h2>
-    <div id="integrated-terminal" style="min-height: 520px; width: 100%;"></div>
-</section>
-
-<script>
-    // Aspettiamo che la finestra sia caricata completamente
-    window.onload = function() {
-        if (window.Jupiter) {
-            window.Jupiter.init({
-                displayMode: "integrated",
-                integratedTargetId: "integrated-terminal",
-                endpoint: "https://api.mainnet-beta.solana.com", // Assicurati che sia corretta
-                strictTokenList: false,
-                formProps: {
-                    fixedOutputMint: true,
-                    initialOutputMint: "IL_TUO_CONTRATTO_WAVE", // METTI QUI IL CA
-                },
-            });
-        } else {
-            console.error("Jupiter Script non caricato correttamente");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$WAVE | Solana-based Neural Engine </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://terminal.jup.ag/main-v3.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
+        .font-vision { font-family: 'Space Grotesk', sans-serif; }
+        .neon-border { box-shadow: 0 0 15px rgba(20, 241, 149, 0.2); border: 1px solid rgba(20, 241, 149, 0.4); }
+        .glow-text { text-shadow: 0 0 10px rgba(153, 69, 255, 0.8); }
+        .gradient-bg { background: linear-gradient(180deg, #050505 0%, #0a0a0a 100%); }
+        /* Forza l'altezza per evitare il rettangolo vuoto */
+        #integrated-terminal { 
+            width: 100%; 
+            min-height: 520px; 
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
         }
-    };
-</script>
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex flex-col items-center px-6 py-12">
+
+    <header class="text-center mb-16">
+        <h1 class="text-6xl font-black font-vision tracking-tighter glow-text uppercase">$WAVE</h1>
+        <p class="text-emerald-400 font-bold tracking-widest mt-2 uppercase text-sm">Neural Motor Active</p>
+    </header>
+
+    <main class="max-w-2xl w-full space-y-8 mb-16">
+        
+        <section class="bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm neon-border">
+            <h2 class="text-xl font-bold mb-6 text-emerald-400 font-vision uppercase tracking-tight text-center">One-Click Deployment</h2>
+            <div id="integrated-terminal"></div>
+        </section>
+
+        <section class="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-sm">
+            <h2 class="text-2xl font-bold mb-4 text-purple-500 font-vision uppercase tracking-tight">The Mission</h2>
+            <p class="text-gray-300 leading-relaxed text-lg">
+                Intelligence meets Geopolitical Strategy. We act in less than 60 seconds.
+            </p>
+        </section>
+    </main>
+
+    <script>
+        function launchJupiter() {
+            if (window.Jupiter) {
+                window.Jupiter.init({
+                    displayMode: "integrated",
+                    integratedTargetId: "integrated-terminal",
+                    endpoint: "https://api.mainnet-beta.solana.com",
+                    strictTokenList: false,
+                    formProps: {
+                        fixedOutputMint: true,
+                        initialOutputMint: "IL_TUO_CONTRATTO_WAVE",
+                    },
+                });
+            } else {
+                // Se non è pronto, riprova tra 500ms
+                setTimeout(launchJupiter, 500);
+            }
+        }
+        // Avvia il check al caricamento
+        window.addEventListener('load', launchJupiter);
+    </script>
+</body>
+</html>
