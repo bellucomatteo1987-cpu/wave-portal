@@ -8,22 +8,21 @@
     <script src="https://terminal.jup.ag/main-v3.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #ffffff; margin: 0; padding: 0; }
+        body { background-color: #000000; color: #ffffff; margin: 0; }
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 20px rgba(20, 241, 149, 0.1); }
-        /* Forza l'altezza e la visibilità del terminale */
+        /* Box forzato */
         #jupiter-terminal { 
             width: 100% !important; 
-            min-height: 520px !important; 
-            display: block !important;
-            background: #0a0a0a;
+            height: 520px !important; 
+            background: #000000;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center py-12 px-4 bg-black">
+<body class="min-h-screen flex flex-col items-center py-12 px-4">
 
     <header class="mb-12 text-center">
         <h1 style="font-family: 'Space Grotesk';" class="text-5xl font-black tracking-tighter uppercase italic text-emerald-400">$WAVE MOTOR</h1>
-        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Secure Deployment Console</p>
+        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Neural Interface v3.1</p>
     </header>
 
     <main class="w-full max-w-md">
@@ -35,26 +34,27 @@
     <script>
         function launchJupiter() {
             if (window.Jupiter) {
-                console.log("Inizializzazione Motore...");
                 window.Jupiter.init({
                     displayMode: "integrated",
                     integratedTargetId: "jupiter-terminal",
-                    // Rimuoviamo l'endpoint per usare quello di default di Jupiter che è più affidabile
+                    endpoint: "https://api.mainnet-beta.solana.com",
                     strictTokenList: false,
+                    theme: "dark", // Forza il tema scuro
                     formProps: {
-                        initialInputMint: "So11111111111111111111111111111111111111112", // SOL
-                        initialOutputMint: "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump", // $WAVE
+                        initialInputMint: "So11111111111111111111111111111111111111112",
+                        initialOutputMint: "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump",
                         fixedOutputMint: true,
                     },
                 });
             } else {
-                console.log("Script non ancora pronto, riprovo...");
                 setTimeout(launchJupiter, 1000);
             }
         }
 
-        // Avvio al caricamento del DOM
-        document.addEventListener('DOMContentLoaded', launchJupiter);
+        // Avvio con leggero ritardo per evitare conflitti con Vercel
+        window.onload = () => {
+            setTimeout(launchJupiter, 500);
+        };
     </script>
 </body>
 </html>
