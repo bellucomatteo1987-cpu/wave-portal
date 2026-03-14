@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$WAVE | Neural Motor</title>
+    <title>$WAVE | Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000000; color: #ffffff; margin: 0; overflow-x: hidden; }
+        body { background-color: #000000; color: #ffffff; margin: 0; overflow-x: hidden; font-family: sans-serif; }
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 25px rgba(20, 241, 149, 0.1); }
         .font-vision { font-family: 'Space Grotesk', sans-serif; }
         .terminal-container { width: 100%; height: 580px; background: #000; overflow: hidden; }
@@ -18,22 +18,18 @@
 
     <header class="mb-8 text-center">
         <h1 class="text-5xl font-black font-vision tracking-tighter uppercase italic text-emerald-400 italic">$WAVE MOTOR</h1>
-        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase italic">Neural Interface - High Priority Link</p>
+        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Neural Interface - Forced Bridge</p>
     </header>
 
     <main class="w-full max-w-md space-y-6">
         <div class="neon-border rounded-3xl overflow-hidden bg-black">
-            <div class="terminal-container">
-                <iframe 
-                    src="https://jup.ag/swap/SOL-2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump?inputMint=So11111111111111111111111111111111111111112&outputMint=2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump&embed=true" 
-                    title="Jupiter Swap">
-                </iframe>
-            </div>
+            <div class="terminal-container" id="iframe-slot">
+                </div>
         </div>
 
-        <div class="bg-white/5 border border-white/10 p-4 rounded-xl flex justify-between items-center group">
-            <code class="text-[10px] text-emerald-400/70 truncate mr-4">2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump</code>
-            <button onclick="navigator.clipboard.writeText('2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump')" class="text-[10px] uppercase font-bold bg-emerald-400 text-black px-3 py-1 rounded hover:bg-white transition-colors">Copy CA</button>
+        <div class="bg-white/5 border border-white/10 p-4 rounded-xl flex justify-between items-center">
+            <code id="ca-text" class="text-[10px] text-emerald-400/70 truncate mr-4">2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump</code>
+            <button onclick="copyCA()" id="copy-btn" class="text-[10px] uppercase font-bold bg-emerald-400 text-black px-3 py-1 rounded transition-all">Copy CA</button>
         </div>
 
         <a href="https://dub.sh/WAVEPortal" class="flex items-center justify-center w-full py-4 bg-white text-black font-black rounded-xl hover:bg-emerald-400 transition-all uppercase text-sm tracking-tighter">
@@ -41,9 +37,37 @@
         </a>
     </main>
 
+    <script>
+        // Forza il caricamento dei token corretti ignorando la cache
+        function loadTerminal() {
+            const container = document.getElementById('iframe-slot');
+            const sol = "So11111111111111111111111111111111111111112";
+            const wave = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump";
+            const ts = new Date().getTime(); // Timestamp unico
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://jup.ag/swap/SOL-${wave}?inputMint=${sol}&outputMint=${wave}&embed=true&v=${ts}`;
+            iframe.title = "Jupiter Swap";
+            container.appendChild(iframe);
+        }
+
+        function copyCA() {
+            navigator.clipboard.writeText('2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump');
+            const btn = document.getElementById('copy-btn');
+            btn.innerText = 'Copied!';
+            btn.classList.replace('bg-emerald-400', 'bg-white');
+            setTimeout(() => {
+                btn.innerText = 'Copy CA';
+                btn.classList.replace('bg-white', 'bg-emerald-400');
+            }, 2000);
+        }
+
+        window.onload = loadTerminal;
+    </script>
+
     <footer class="mt-10 opacity-20 text-[9px] uppercase tracking-[0.5em] text-center">
         Motor Status: Online<br>
-        Pair: SOL / $WAVE
+        Bypassing Browser Cache...
     </footer>
 
 </body>
