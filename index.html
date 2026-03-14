@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$WAVE | Neural Motor</title>
+    <title>$WAVE | Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://terminal.jup.ag/main-v3.js" defer></script>
+    <script src="https://terminal.jup.ag/main-v3.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #ffffff; font-family: sans-serif; }
+        body { background-color: #050505; color: #ffffff; margin: 0; padding: 0; }
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 20px rgba(20, 241, 149, 0.1); }
-        #jupiter-terminal { width: 100%; min-height: 520px; background: rgba(255, 255, 255, 0.02); }
+        /* Forza l'altezza e la visibilità del terminale */
+        #jupiter-terminal { 
+            width: 100% !important; 
+            min-height: 520px !important; 
+            display: block !important;
+            background: #0a0a0a;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center py-12 px-4 bg-black">
 
     <header class="mb-12 text-center">
         <h1 style="font-family: 'Space Grotesk';" class="text-5xl font-black tracking-tighter uppercase italic text-emerald-400">$WAVE MOTOR</h1>
-        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase underline">Secure Deployment Console</p>
+        <p class="text-[10px] tracking-[0.4em] text-white/40 mt-2 uppercase">Secure Deployment Console</p>
     </header>
 
     <main class="w-full max-w-md">
@@ -27,12 +33,13 @@
     </main>
 
     <script>
-        function launchMotor() {
+        function launchJupiter() {
             if (window.Jupiter) {
+                console.log("Inizializzazione Motore...");
                 window.Jupiter.init({
                     displayMode: "integrated",
                     integratedTargetId: "jupiter-terminal",
-                    // LASCIAMO CHE JUPITER SCELGA L'RPC MIGLIORE AUTOMATICAMENTE
+                    // Rimuoviamo l'endpoint per usare quello di default di Jupiter che è più affidabile
                     strictTokenList: false,
                     formProps: {
                         initialInputMint: "So11111111111111111111111111111111111111112", // SOL
@@ -41,13 +48,13 @@
                     },
                 });
             } else {
-                // Riprova se lo script non è ancora caricato
-                setTimeout(launchMotor, 1000);
+                console.log("Script non ancora pronto, riprovo...");
+                setTimeout(launchJupiter, 1000);
             }
         }
-        
-        // Avvia il caricamento quando la pagina è pronta
-        window.addEventListener('load', launchMotor);
+
+        // Avvio al caricamento del DOM
+        document.addEventListener('DOMContentLoaded', launchJupiter);
     </script>
 </body>
 </html>
