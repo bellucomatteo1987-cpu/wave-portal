@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>$WAVE | Solana-based Neural Engine </title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://terminal.jup.ag/main-v3.js" data-preload></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
@@ -12,6 +13,8 @@
         .neon-border { box-shadow: 0 0 15px rgba(20, 241, 149, 0.3); border: 1px solid rgba(20, 241, 149, 0.5); }
         .glow-text { text-shadow: 0 0 10px rgba(153, 69, 255, 0.8); }
         .gradient-bg { background: linear-gradient(180deg, #050505 0%, #0a0a0a 100%); }
+        /* Style personalizzato per il terminale Jupiter */
+        #integrated-terminal { width: 100%; min-height: 500px; border-radius: 1rem; overflow: hidden; }
     </style>
 </head>
 <body class="gradient-bg min-h-screen flex flex-col items-center px-6 py-12">
@@ -25,6 +28,11 @@
     </header>
 
     <main class="max-w-2xl w-full space-y-8 mb-16">
+        <section class="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-sm neon-border">
+            <h2 class="text-2xl font-bold mb-6 text-emerald-400 font-vision uppercase tracking-tight text-center">One-Click Deployment</h2>
+            <div id="integrated-terminal"></div>
+        </section>
+
         <section class="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-sm">
             <h2 class="text-2xl font-bold mb-4 text-purple-500 font-vision uppercase tracking-tight">The Mission</h2>
             <p class="text-gray-300 leading-relaxed text-lg">
@@ -35,7 +43,7 @@
         <section class="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-sm">
             <h2 class="text-2xl font-bold mb-4 text-purple-500 font-vision uppercase tracking-tight">The Asset</h2>
             <p class="text-gray-300 leading-relaxed text-lg">
-                $WAVE is the fuel of our ecosystem. Built on transparency, skin in the game, and  <span class="italic">"Diamonds Hands Mindset"</span>. We build floors, we don't just chase peaks.
+                $WAVE is the fuel of our ecosystem. Built on transparency, skin in the game, and <span class="italic">"Diamonds Hands Mindset"</span>. We build floors, we don't just chase peaks.
             </p>
         </section>
     </main>
@@ -54,5 +62,19 @@
         </p>
     </footer>
 
+    <script>
+        window.Jupiter.init({
+            displayMode: "integrated",
+            integratedTargetId: "integrated-terminal",
+            endpoint: "https://api.mainnet-beta.solana.com",
+            strictTokenList: false,
+            formProps: {
+                fixedOutputMint: true,
+                initialOutputMint: "IL_TUO_CONTRATTO_WAVE", // INSERISCI QUI IL CA DI $WAVE
+            },
+            containerStyles: { zIndex: 20 },
+            confirmationStrategy: 'confirmed',
+        });
+    </script>
 </body>
 </html>
