@@ -3,51 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$WAVE | Terminal</title>
+    <title>$WAVE | Solana Neural Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://terminal.jup.ag/main-v3.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #ffffff; }
-        .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 20px rgba(20, 241, 149, 0.1); }
-        #jupiter-terminal { width: 100%; min-height: 520px; background: rgba(255,255,255,0.02); }
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ffffff; }
+        .font-vision { font-family: 'Space Grotesk', sans-serif; }
+        .neon-border { box-shadow: 0 0 15px rgba(20, 241, 149, 0.2); border: 1px solid rgba(20, 241, 149, 0.4); }
+        .glow-text { text-shadow: 0 0 10px rgba(153, 69, 255, 0.8); }
+        .gradient-bg { background: linear-gradient(180deg, #050505 0%, #0a0a0a 100%); }
+        #jupiter-terminal { width: 100%; min-height: 520px; border-radius: 1rem; overflow: hidden; background: rgba(0,0,0,0.3); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center py-12 px-4 bg-black">
+<body class="gradient-bg min-h-screen flex flex-col items-center px-6 py-12">
 
-    <header class="mb-12 text-center">
-        <h1 style="font-family: 'Space Grotesk';" class="text-5xl font-black tracking-tighter uppercase italic text-emerald-400">$WAVE MOTOR</h1>
-        <p class="text-[10px] tracking-[0.3em] text-white/40 mt-2 uppercase">Neural Interface v3.0</p>
+    <header class="text-center mb-16">
+        <h1 class="text-6xl font-black font-vision tracking-tighter glow-text uppercase">$WAVE</h1>
+        <p class="text-emerald-400 font-bold tracking-widest mt-2 uppercase text-sm">Neural Motor Active</p>
     </header>
 
-    <main class="w-full max-w-md">
-        <div class="neon-border rounded-3xl overflow-hidden bg-black p-1">
+    <main class="max-w-2xl w-full space-y-8 mb-16">
+        <section class="bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm neon-border">
+            <h2 class="text-xl font-bold mb-6 text-emerald-400 font-vision uppercase tracking-tight text-center italic">Deploy Capital</h2>
             <div id="jupiter-terminal"></div>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                <h3 class="text-purple-500 font-bold uppercase mb-2">Strategy</h3>
+                <p class="text-gray-400 text-sm">H24 Monitoring of Whales and Geopolitical shifts.</p>
+            </div>
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                <h3 class="text-purple-500 font-bold uppercase mb-2">Value</h3>
+                <p class="text-gray-400 text-sm">Total credibility through Diamond Hands mindset.</p>
+            </div>
         </div>
     </main>
 
+    <footer class="w-full max-w-sm space-y-4">
+        <a href="https://dub.sh/WAVEPortal" class="flex items-center justify-center w-full py-4 bg-white text-black font-black rounded-xl hover:bg-emerald-400 transition-all uppercase tracking-tighter">
+            Join Telegram
+        </a>
+        <div class="grid grid-cols-2 gap-3 text-center">
+            <a href="https://dub.sh/WAVEchart" class="bg-white/10 py-3 rounded-xl text-xs font-bold uppercase">Chart</a>
+            <a href="https://dub.sh/solanawave" class="bg-white/10 py-3 rounded-xl text-xs font-bold uppercase">Pump.fun</a>
+        </div>
+    </footer>
+
     <script>
-        // Funzione per inizializzare con un endpoint più stabile
-        function initWAVE() {
+        function launchTerminal() {
             if (window.Jupiter) {
                 window.Jupiter.init({
                     displayMode: "integrated",
                     integratedTargetId: "jupiter-terminal",
-                    // Usiamo l'endpoint ottimizzato di Jupiter/Helius
-                    endpoint: "https://mainnet.helius-rpc.com/?api-key=069695b2-3023-42e4-8d96-03f429737651",
+                    // Endpoint alternativo più leggero e veloce
+                    endpoint: "https://cloudflare-eth.com/v1/mainnet" === "" ? "https://api.mainnet-beta.solana.com" : "https://api.mainnet-beta.solana.com",
+                    // Se l'errore RPC persiste, Jupiter userà i suoi nodi interni se non specifichiamo l'endpoint in modo rigido
                     strictTokenList: false,
                     formProps: {
-                        initialInputMint: "So11111111111111111111111111111111111111112",
-                        initialOutputMint: "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump",
+                        initialInputMint: "So11111111111111111111111111111111111111112", // SOL
+                        initialOutputMint: "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump", // $WAVE
                         fixedOutputMint: true,
                     },
                 });
             } else {
-                setTimeout(initWAVE, 500); // Riprova se lo script non è pronto
+                setTimeout(launchTerminal, 800);
             }
         }
-
-        window.addEventListener('load', initWAVE);
+        window.addEventListener('load', launchTerminal);
     </script>
 </body>
 </html>
