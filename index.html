@@ -88,58 +88,57 @@
             const status = document.getElementById('verify-status');
 
             if (!walletStr) return;
-            status.innerText = "Neural Scan: Inviando segnali...";
+            
+            status.innerText = "Neural Scan: Validazione...";
             verifyBtn.disabled = true;
 
-            // Lista di nodi RPC (Ridondanza Massima)
-            const rpcList = [
-                "https://api.mainnet-beta.solana.com",
-                "https://solana-mainnet.rpc.extrnode.com",
-                "https://rpc.ankr.com/solana"
-            ];
-
-            let verified = false;
-
-            // Test parallelo: il primo che risponde vince
-            const tasks = rpcList.map(async (url) => {
+            try {
+                // 1. RIGIDO CONTROLLO MATEMATICO (Checksum Solana)
+                let pubKey;
                 try {
+                    pubKey = new solanaWeb3.PublicKey(walletStr);
+                    if (!solanaWeb3.PublicKey.isOnCurve(pubKey.toBytes())) throw new Error();
+                } catch (e) {
+                    status.innerText = "ACCESSO NEGATO: Wallet invalido.";
+                    verifyBtn.disabled = false;
+                    return;
+                }
+
+                // 2. RIGIDO CONTROLLO BLOCKCHAIN (Verifica saldo WAVE)
+                const rpcNodes = [
+                    "https://api.mainnet-beta.solana.com",
+                    "https://solana-mainnet.rpc.extrnode.com",
+                    "https://rpc.ankr.com/solana"
+                ];
+
+                const checkBalance = async (url) => {
                     const conn = new solanaWeb3.Connection(url, "confirmed");
-                    const pubKey = new solanaWeb3.PublicKey(walletStr);
-                    const accounts = await conn.getParsedTokenAccountsByOwner(pubKey, {
+                    const response = await conn.getParsedTokenAccountsByOwner(pubKey, {
                         mint: new solanaWeb3.PublicKey(WAVE_CA)
                     });
-                    if (accounts.value.length > 0) {
-                        const bal = accounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-                        return bal > 0;
+                    if (response.value.length > 0) {
+                        return response.value[0].account.data.parsed.info.tokenAmount.uiAmount;
                     }
-                    return false;
-                } catch (e) {
-                    return null;
-                }
-            });
+                    return 0;
+                };
 
-            try {
-                const results = await Promise.all(tasks);
-                verified = results.some(r => r === true);
+                // Eseguiamo la ricerca parallela
+                const results = await Promise.all(rpcNodes.map(url => checkBalance(url).catch(() => 0)));
+                const maxBalance = Math.max(...results);
 
-                if (verified) {
-                    status.innerText = "Socio Verificato. Sblocco...";
+                if (maxBalance > 0) {
+                    status.innerText = "SOCIO CONFERMATO. Apertura...";
                     status.style.color = "#10f195";
                     setTimeout(() => { 
                         document.getElementById('lock-overlay').style.display = 'none'; 
                     }, 800);
                 } else {
-                    // Controllo se è un errore di rete o se non ha davvero i token
-                    const allFailed = results.every(r => r === null);
-                    if (allFailed) {
-                        status.innerText = "Rete congestionata. Riprova tra 2 secondi.";
-                    } else {
-                        status.innerText = "ACCESSO NEGATO: Saldo $WAVE non trovato.";
-                    }
+                    status.innerText = "ACCESSO NEGATO: Saldo $WAVE pari a zero.";
                     verifyBtn.disabled = false;
                 }
+
             } catch (err) {
-                status.innerText = "Indirizzo Wallet non valido.";
+                status.innerText = "ERRORE DI RETE: Riprova tra 5 secondi.";
                 verifyBtn.disabled = false;
             }
         });
