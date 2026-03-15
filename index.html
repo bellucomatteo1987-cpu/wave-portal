@@ -46,12 +46,12 @@
             <div id="lock-overlay" class="absolute inset-0 bg-black/95 backdrop-blur-md z-10 flex flex-col items-center justify-center p-6 text-center">
                 <p class="text-emerald-400 font-vision font-bold uppercase tracking-widest mb-4 italic text-xs">Access Restricted: $WAVE Holders Only</p>
                 <input type="text" id="wallet-input" placeholder="Paste Wallet Address" class="w-full p-3 rounded-lg mb-3 text-xs outline-none focus:border-emerald-400">
-                <button onclick="verifyHolder()" id="verify-btn" class="w-full py-3 bg-emerald-500 text-black font-black rounded-lg text-[10px] uppercase tracking-tighter hover:bg-white transition-all">Verify Wallet</button>
+                <button id="verify-btn" class="w-full py-3 bg-emerald-500 text-black font-black rounded-lg text-[10px] uppercase tracking-tighter hover:bg-white transition-all">Verify Wallet</button>
                 <p id="verify-status" class="mt-2 text-[9px] text-white/30 uppercase italic"></p>
             </div>
 
             <div class="space-y-4">
-                <h3 class="text-xl font-bold font-vision text-emerald-400 uppercase italic">Risk Terminal</h3>
+                <h3 class="text-xl font-bold font-vision text-emerald-400 uppercase italic text-center">Risk Terminal</h3>
                 <div class="space-y-3">
                     <div>
                         <label class="text-[8px] uppercase text-white/40 ml-1 italic">Total Capital (SOL)</label>
@@ -69,7 +69,108 @@
                             <option value="0.6">DEGEN (Danger)</option>
                         </select>
                     </div>
-                    <button onclick="calculateRisk()" class="w-full py-3 border border-emerald-500/50 text-emerald-400 font-black rounded-xl text-[10px] uppercase hover:bg-emerald-500 hover:text-black transition-all">Analyze Exposure</button>
+                    <button id="calc-btn" class="w-full py-3 border border-emerald-500/50 text-emerald-400 font-black rounded-xl text-[10px] uppercase hover:bg-emerald-500 hover:text-black transition-all">Analyze Exposure</button>
                 </div>
                 <div id="result-box" class="hidden mt-4 p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
-                    <p id="result-text" class="text-
+                    <p id="result-text" class="text-[11px] font-vision leading-tight text-white/90"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur-sm space-y-5">
+            <div class="space-y-2 text-center">
+                <h3 class="text-xl font-bold font-vision text-emerald-400 uppercase tracking-tight italic">Protocol Status</h3>
+                <p class="text-sm text-gray-300 leading-relaxed">
+                    The $WAVE Neural Motor is now operational. Join our specialized community for real-time intelligence deployment.
+                </p>
+            </div>
+            <a href="https://dub.sh/WAVEPortal" class="flex items-center justify-center w-full py-4 bg-white text-black font-black rounded-xl hover:bg-emerald-400 transition-all uppercase text-sm tracking-tighter">
+                Enter the Neural Portal (TG)
+            </a>
+        </div>
+    </main>
+
+    <footer class="mt-12 text-center text-[9px] text-white/10 uppercase tracking-[0.5em] pb-8 italic">
+        "Matematica della Prudenza" - Powered by Neural Interface
+    </footer>
+
+    <script>
+        const WAVE_CA = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump";
+
+        // Funzione Copia CA
+        window.copyCA = function() {
+            navigator.clipboard.writeText(WAVE_CA);
+            const btn = document.getElementById('copy-btn');
+            btn.innerText = 'Copied!';
+            setTimeout(() => { btn.innerText = 'Copy CA'; }, 2000);
+        };
+
+        // Attesa caricamento libreria Solana
+        document.addEventListener('DOMContentLoaded', () => {
+            const verifyBtn = document.getElementById('verify-btn');
+            const calcBtn = document.getElementById('calc-btn');
+
+            verifyBtn.addEventListener('click', async () => {
+                const walletInput = document.getElementById('wallet-input').value.trim();
+                const status = document.getElementById('verify-status');
+
+                if (!walletInput) {
+                    status.innerText = "Error: Paste your wallet.";
+                    return;
+                }
+
+                if (typeof solanaWeb3 === 'undefined') {
+                    status.innerText = "Error: Library not ready.";
+                    return;
+                }
+
+                status.innerText = "Scanning Blockchain...";
+                verifyBtn.disabled = true;
+
+                try {
+                    const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
+                    const publicKey = new solanaWeb3.PublicKey(walletInput);
+                    
+                    const response = await connection.getParsedTokenAccountsByOwner(publicKey, { 
+                        mint: new solanaWeb3.PublicKey(WAVE_CA) 
+                    });
+
+                    if (response.value.length > 0) {
+                        const balance = response.value[0].account.data.parsed.info.tokenAmount.uiAmount;
+                        if (balance > 0) {
+                            status.innerText = "Verified.";
+                            setTimeout(() => { 
+                                document.getElementById('lock-overlay').style.display = 'none'; 
+                            }, 500);
+                        } else {
+                            status.innerText = "Hold $WAVE to access.";
+                            verifyBtn.disabled = false;
+                        }
+                    } else {
+                        status.innerText = "No $WAVE found.";
+                        verifyBtn.disabled = false;
+                    }
+                } catch (err) {
+                    status.innerText = "Invalid Wallet Address.";
+                    verifyBtn.disabled = false;
+                }
+            });
+
+            calcBtn.addEventListener('click', () => {
+                const cap = parseFloat(document.getElementById('total-cap').value);
+                const risk = parseFloat(document.getElementById('risk-perc').value);
+                const vol = parseFloat(document.getElementById('asset-type').value);
+                
+                if(isNaN(cap) || isNaN(risk)) return;
+
+                const size = (cap * (risk / 100)) / vol;
+                const resBox = document.getElementById('result-box');
+                resBox.classList.remove('hidden');
+                document.getElementById('result-text').innerHTML = `
+                    <span class="text-emerald-400 font-bold uppercase tracking-tighter">Suggested Size:</span> ${size.toFixed(3)} SOL<br><br>
+                    <span class="text-[9px] text-white/40 italic uppercase italic">"Prudenza e Sodo: Il protocollo è attivo."</span>`;
+            });
+        });
+    </script>
+</body>
+</html>
