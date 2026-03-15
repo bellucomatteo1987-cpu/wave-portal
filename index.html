@@ -89,6 +89,7 @@
                             <p class="text-white/40 italic"><span class="text-emerald-400/60">Total SOL:</span> Liquid ammunition.</p>
                             <p class="text-white/40 italic"><span class="text-emerald-400/60">Risk %:</span> Max capital loss per trade.</p>
                             <p class="text-white/40 italic"><span class="text-emerald-400/60">Multipliers:</span> Blue Chip (Stable) | Volatile (Meme) | Degen (Danger).</p>
+                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Recommended Size:</span> This is your Safety Allocation. If the result is > your balance, your risk settings are too high for your current ammunition.</p>
                         </div>
                         <div class="space-y-1">
                             <p class="text-white/80 font-bold underline italic">2. Neural Pulse Feed:</p>
@@ -162,9 +163,22 @@
                 const vol = parseFloat(document.getElementById('asset-type').value);
                 if (isNaN(cap) || isNaN(rsk)) return;
                 
-                const size = (cap * (rsk / 100)) / vol;
+                // Calcolo Size Teorica
+                let size = (cap * (rsk / 100)) / vol;
+
+                // Tappo di Sicurezza: Protocollo Sodo & Prudente
+                let isMax = false;
+                if (size > cap) {
+                    size = cap;
+                    isMax = true;
+                }
+
                 document.getElementById('result-box').classList.remove('hidden');
-                document.getElementById('result-text').innerHTML = `RECOMMENDED SIZE: ${size.toFixed(3)} SOL<br><span class="text-[8px] text-white/30 uppercase mt-2 block italic">Neural Logic: Sodo & Prudente.</span>`;
+                document.getElementById('result-text').innerHTML = `
+                    RECOMMENDED SIZE: ${size.toFixed(3)} SOL<br>
+                    <span class="text-[8px] text-white/30 uppercase mt-2 block italic">
+                        ${isMax ? '⚠️ MAX ALL-IN ALLOCATION' : 'Neural Logic: Sodo & Prudente.'}
+                    </span>`;
             });
         }
     });
