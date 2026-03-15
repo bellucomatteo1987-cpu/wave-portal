@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>$WAVE | Neural Motor</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000000; color: #ffffff; margin: 0; overflow-x: hidden; font-family: sans-serif; }
@@ -14,9 +13,9 @@
         .font-vision { font-family: 'Space Grotesk', sans-serif; }
         .terminal-container { width: 100%; height: 600px; background: #000; overflow: hidden; position: relative; }
         iframe { width: 100%; height: 100%; border: none; color-scheme: dark; }
-        input, select { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
         
-        /* Custom Scrollbar for the Echo Board */
+        /* Echo Board Styling */
+        #msg-list { scrollbar-width: thin; scrollbar-color: rgba(20, 241, 149, 0.3) transparent; }
         #msg-list::-webkit-scrollbar { width: 4px; }
         #msg-list::-webkit-scrollbar-thumb { background: rgba(20, 241, 149, 0.3); border-radius: 10px; }
     </style>
@@ -34,10 +33,7 @@
     <main class="w-full max-w-md space-y-6">
         <div class="neon-border rounded-3xl overflow-hidden bg-black p-1">
             <div class="terminal-container">
-                <iframe 
-                    src="https://raydium.io/swap/?inputMint=sol&outputMint=2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump" 
-                    title="Raydium Swap">
-                </iframe>
+                <iframe src="https://raydium.io/swap/?inputMint=sol&outputMint=2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump" title="Raydium Swap"></iframe>
             </div>
         </div>
 
@@ -48,16 +44,16 @@
 
         <div class="bg-black border border-emerald-500/20 p-6 rounded-2xl relative overflow-hidden shadow-2xl">
             <div id="lock-overlay" class="absolute inset-0 bg-black/95 backdrop-blur-md z-10 flex flex-col items-center justify-center p-6 text-center">
-                <h2 class="text-emerald-400 font-vision font-bold uppercase tracking-widest mb-1 text-sm italic">The Wave Echo</h2>
-                <p class="text-[9px] text-white/50 uppercase mb-4 tracking-tighter">Leave your signal in the neural network</p>
+                <h2 class="text-emerald-400 font-vision font-bold uppercase tracking-widest mb-1 text-sm italic">THE WAVE ECHO</h2>
+                <p class="text-[9px] text-white/50 uppercase mb-4 tracking-tighter italic">Broadcast your signal to the network</p>
                 
-                <input type="text" id="user-msg" placeholder="Nickname or Signal..." maxlength="40" class="w-full p-3 rounded-lg mb-3 text-xs outline-none border border-white/10 focus:border-emerald-400">
+                <input type="text" id="user-msg" placeholder="Write a degen phrase..." maxlength="50" class="w-full p-3 rounded-lg mb-3 text-xs outline-none border border-white/10 bg-white/5 text-white focus:border-emerald-400">
                 
-                <button id="verify-btn" class="w-full py-3 bg-emerald-500 text-black font-black rounded-lg text-[10px] uppercase tracking-widest hover:bg-white transition-all shadow-[0_0_15px_rgba(16,241,149,0.3)]">Access Terminal</button>
+                <button id="verify-btn" class="w-full py-3 bg-[#10f195] text-black font-black rounded-lg text-[10px] uppercase tracking-widest hover:bg-white transition-all shadow-[0_0_15px_rgba(16,241,149,0.3)]">SEND & ACCESS</button>
                 
                 <div class="w-full mt-6 text-left border-t border-white/5 pt-4">
-                    <p class="text-[8px] text-emerald-400/60 uppercase font-bold mb-2 tracking-widest">Live Network Pulse:</p>
-                    <ul id="msg-list" class="text-[10px] font-mono text-white/40 space-y-1 overflow-y-auto max-height-[100px] list-none">
+                    <p class="text-[8px] text-emerald-400/60 uppercase font-bold mb-2 tracking-widest italic">NEURAL PULSE FEED:</p>
+                    <ul id="msg-list" class="text-[10px] font-mono text-white/40 space-y-2 overflow-y-auto max-h-[120px] pr-2">
                         </ul>
                 </div>
             </div>
@@ -65,9 +61,9 @@
             <div class="space-y-4">
                 <h3 class="text-xl font-bold font-vision text-emerald-400 uppercase italic text-center">Risk Terminal</h3>
                 <div class="space-y-3">
-                    <input type="number" id="total-cap" placeholder="Total SOL Balance" class="w-full p-3 rounded-lg text-xs outline-none">
-                    <input type="number" id="risk-perc" placeholder="Risk % (e.g. 1)" class="w-full p-3 rounded-lg text-xs outline-none">
-                    <select id="asset-type" class="w-full p-3 rounded-lg text-[10px] outline-none cursor-pointer">
+                    <input type="number" id="total-cap" placeholder="Total SOL Balance" class="w-full p-3 rounded-lg text-xs outline-none bg-white/5 border border-white/10 text-white">
+                    <input type="number" id="risk-perc" placeholder="Risk % (e.g. 1)" class="w-full p-3 rounded-lg text-xs outline-none bg-white/5 border border-white/10 text-white">
+                    <select id="asset-type" class="w-full p-3 rounded-lg text-[10px] outline-none cursor-pointer bg-white/5 border border-white/10 text-white">
                         <option value="0.1">BLUE CHIP (Safe)</option>
                         <option value="0.3">VOLATILE (Meme)</option>
                         <option value="0.6">DEGEN (Danger)</option>
@@ -90,10 +86,12 @@
         const msgInput = document.getElementById('user-msg');
         const msgList = document.getElementById('msg-list');
 
-        // Load Echo Messages from LocalStorage
+        // Initial Spartan Board Messages
+        const defaultSignals = ["WAVE Neural Online", "Watching Whales...", "Solana is the future", "LFG $WAVE"];
+        
         const loadEcho = () => {
-            const signals = JSON.parse(localStorage.getItem('wave_echo_signals') || '["WAVE Neural Online", "Watching Whales...", "LFG Solana"]');
-            msgList.innerHTML = signals.reverse().map(s => `<li class="truncate"><span class="text-emerald-500/50">></span> ${s}</li>`).join('');
+            const signals = JSON.parse(localStorage.getItem('wave_echo_signals') || JSON.stringify(defaultSignals));
+            msgList.innerHTML = signals.slice().reverse().map(s => `<li class="border-l border-emerald-500/30 pl-2 py-1 italic break-words">${s}</li>`).join('');
         };
         loadEcho();
 
@@ -104,28 +102,25 @@
             setTimeout(() => { btn.innerText = 'Copy CA'; }, 2000);
         };
 
-        // Instant Access Logic
         verifyBtn.addEventListener('click', () => {
-            const signal = msgInput.value.trim() || "Anonymous joined";
+            const signal = msgInput.value.trim() || "New user connected";
             
-            // Save to LocalStorage Echo
-            let signals = JSON.parse(localStorage.getItem('wave_echo_signals') || '[]');
+            // Save Signal Locally
+            let signals = JSON.parse(localStorage.getItem('wave_echo_signals') || JSON.stringify(defaultSignals));
             signals.push(signal);
-            if(signals.length > 15) signals.shift(); // Keep last 15
+            if(signals.length > 20) signals.shift();
             localStorage.setItem('wave_echo_signals', JSON.stringify(signals));
 
-            verifyBtn.innerText = "SYNCHRONIZING...";
+            verifyBtn.innerText = "BROADCASTING...";
             verifyBtn.disabled = true;
 
-            // Visual Unlock Sequence
+            // Visual Transition
             setTimeout(() => {
                 const overlay = document.getElementById('lock-overlay');
                 overlay.style.transition = "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
                 overlay.style.opacity = "0";
-                overlay.style.transform = "translateY(-40px) scale(1.02)";
-                setTimeout(() => { 
-                    overlay.style.display = 'none'; 
-                }, 600);
+                overlay.style.transform = "translateY(-40px)";
+                setTimeout(() => { overlay.style.display = 'none'; }, 600);
             }, 800);
         });
 
@@ -140,11 +135,4 @@
                 const resBox = document.getElementById('result-box');
                 resBox.classList.remove('hidden');
                 document.getElementById('result-text').innerHTML = `
-                    <span class="text-emerald-400 font-bold uppercase">Recommended Size:</span> ${size.toFixed(3)} SOL<br><br>
-                    <span class="text-[9px] text-white/40 italic uppercase">Neural Logic: Sodo & Prudente Protocol Active.</span>`;
-            });
-        }
-    });
-</script>
-</body>
-</html>
+                    <span class="text-emerald-400 font-bold uppercase">Recommended Size:</span> ${size.toFixed(3)} SOL
