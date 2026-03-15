@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>$WAVE | Neural Motor</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000000; color: #ffffff; margin: 0; overflow-x: hidden; font-family: sans-serif; }
@@ -13,7 +14,6 @@
         .font-vision { font-family: 'Space Grotesk', sans-serif; }
         .terminal-container { width: 100%; height: 600px; background: #000; overflow: hidden; position: relative; }
         iframe { width: 100%; height: 100%; border: none; color-scheme: dark; }
-        
         #persistent-echo-list::-webkit-scrollbar { width: 4px; }
         #persistent-echo-list::-webkit-scrollbar-thumb { background: rgba(20, 241, 149, 0.3); border-radius: 10px; }
     </style>
@@ -31,7 +31,7 @@
     <main class="w-full max-w-md space-y-6">
         <div class="neon-border rounded-3xl overflow-hidden bg-black p-1">
             <div class="terminal-container">
-                <iframe id="swap-frame" src="https://raydium.io/swap/?inputMint=sol&outputMint=2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump" title="Raydium Swap"></iframe>
+                <iframe src="https://raydium.io/swap/?inputMint=sol&outputMint=2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump" title="Raydium Swap"></iframe>
             </div>
         </div>
 
@@ -52,7 +52,7 @@
                 <div class="border-b border-white/5 pb-4">
                     <p class="text-[8px] text-emerald-400/60 uppercase font-bold mb-3 tracking-widest italic">NEURAL PULSE FEED:</p>
                     <ul id="persistent-echo-list" class="text-[10px] font-mono text-white/40 space-y-2 overflow-y-auto max-h-[80px] pr-2 list-none">
-                    </ul>
+                        </ul>
                 </div>
 
                 <div class="space-y-4">
@@ -76,25 +76,34 @@
     </main>
 
 <script>
-    const WAVE_CA = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump"; 
+    const SUPABASE_URL = 'https://ojfplozwfidjwqwpwcdt.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_McakxoSphNnS09S5kcWhIg_iGo705zF';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const WAVE_CA = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump";
 
     document.addEventListener('DOMContentLoaded', () => {
         const verifyBtn = document.getElementById('verify-btn');
         const calcBtn = document.getElementById('calc-btn');
         const msgInput = document.getElementById('user-msg');
         const persistentList = document.getElementById('persistent-echo-list');
-        const caDisplay = document.getElementById('ca-text');
         const overlay = document.getElementById('lock-overlay');
-        
-        caDisplay.innerText = WAVE_CA;
 
-        const defaultSignals = ["WAVE Neural Online", "Watching Whales...", "LFG $WAVE", "Smart Money Inflow"];
-
-        const updateBoard = () => {
-            const signals = JSON.parse(localStorage.getItem('wave_echo_signals') || JSON.stringify(defaultSignals));
-            persistentList.innerHTML = signals.slice().reverse().map(s => `<li class="border-l border-emerald-500/30 pl-2 py-0.5 italic truncate opacity-80 hover:opacity-100 transition-opacity">${s}</li>`).join('');
+        const loadGlobalEcho = async () => {
+            const { data, error } = await _supabase
+                .from('messages')
+                .select('content')
+                .order('created_at', { ascending: false })
+                .limit(10);
+            if (!error && data) {
+                persistentList.innerHTML = data.map(m => `<li class="border-l border-emerald-500/30 pl-2 py-0.5 italic truncate opacity-80 hover:opacity-100 transition-opacity">${m.content}</li>`).join('');
+            }
         };
-        updateBoard();
+
+        loadGlobalEcho();
+
+        _supabase.channel('public:messages').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => {
+            loadGlobalEcho();
+        }).subscribe();
 
         window.copyCA = function() {
             navigator.clipboard.writeText(WAVE_CA);
@@ -102,46 +111,30 @@
             setTimeout(() => { document.getElementById('copy-btn').innerText = 'Copy CA'; }, 2000);
         };
 
-        // ACCESS LOGIC
-        verifyBtn.addEventListener('click', () => {
-            const signal = msgInput.value.trim() || "User Synchronized";
-            
-            let signals = JSON.parse(localStorage.getItem('wave_echo_signals') || JSON.stringify(defaultSignals));
-            signals.push(signal);
-            if(signals.length > 10) signals.shift();
-            localStorage.setItem('wave_echo_signals', JSON.stringify(signals));
-
-            updateBoard();
-            
+        verifyBtn.addEventListener('click', async () => {
+            const signal = msgInput.value.trim() || "Signal Synchronized";
             verifyBtn.innerText = "BROADCASTING...";
             verifyBtn.disabled = true;
+
+            await _supabase.from('messages').insert([{ content: signal }]);
 
             setTimeout(() => {
                 overlay.style.transition = "all 0.6s ease-in-out";
                 overlay.style.opacity = "0";
-                overlay.style.pointerEvents = "none"; 
-                
-                setTimeout(() => { 
-                    overlay.style.display = 'none'; 
-                }, 600);
+                overlay.style.pointerEvents = "none";
+                setTimeout(() => { overlay.style.display = 'none'; }, 600);
             }, 800);
         });
 
-        // CALC LOGIC
         if (calcBtn) {
             calcBtn.addEventListener('click', () => {
                 const cap = parseFloat(document.getElementById('total-cap').value);
                 const rsk = parseFloat(document.getElementById('risk-perc').value);
                 const vol = parseFloat(document.getElementById('asset-type').value);
-                
                 if (isNaN(cap) || isNaN(rsk)) return;
-
                 const size = (cap * (rsk / 100)) / vol;
-                const resultBox = document.getElementById('result-box');
-                const resultText = document.getElementById('result-text');
-                
-                resultBox.classList.remove('hidden');
-                resultText.innerHTML = `RECOMMENDED SIZE: ${size.toFixed(3)} SOL<br><span class="text-[8px] text-white/30 uppercase mt-2 block italic">Neural Logic: Sodo & Prudente.</span>`;
+                document.getElementById('result-box').classList.remove('hidden');
+                document.getElementById('result-text').innerHTML = `RECOMMENDED SIZE: ${size.toFixed(3)} SOL<br><span class="text-[8px] text-white/30 uppercase mt-2 block italic">Neural Logic: Sodo & Prudente.</span>`;
             });
         }
     });
