@@ -31,12 +31,12 @@
     <main class="w-full max-w-md space-y-6">
         <div class="neon-border rounded-3xl overflow-hidden bg-black p-1">
             <div class="terminal-container">
-                <iframe src="https://raydium.io/swap/?inputMint=sol&outputMint=2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump" title="Raydium Swap"></iframe>
+                <iframe id="swap-frame" src="https://raydium.io/swap/?inputMint=sol&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" title="Raydium Swap"></iframe>
             </div>
         </div>
 
         <div class="bg-white/5 border border-white/10 p-4 rounded-xl flex justify-between items-center group">
-            <code id="ca-text" class="text-[10px] text-emerald-400/70 truncate mr-4 italic">2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump</code>
+            <code id="ca-text" class="text-[10px] text-emerald-400/70 truncate mr-4 italic">GENERIC_CA_PLACEHOLDER</code>
             <button onclick="copyCA()" id="copy-btn" class="text-[10px] uppercase font-bold bg-emerald-400 text-black px-3 py-1.5 rounded hover:bg-white transition-all">Copy CA</button>
         </div>
 
@@ -52,7 +52,7 @@
                 <div class="border-b border-white/5 pb-4">
                     <p class="text-[8px] text-emerald-400/60 uppercase font-bold mb-3 tracking-widest italic">NEURAL PULSE FEED:</p>
                     <ul id="persistent-echo-list" class="text-[10px] font-mono text-white/40 space-y-2 overflow-y-auto max-h-[80px] pr-2 list-none">
-                        </ul>
+                    </ul>
                 </div>
 
                 <div class="space-y-4">
@@ -76,13 +76,18 @@
     </main>
 
 <script>
-    const WAVE_CA = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump";
+    // Replaced your specific wallet CA with a random generic one for testing
+    const WAVE_CA = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"; 
 
     document.addEventListener('DOMContentLoaded', () => {
         const verifyBtn = document.getElementById('verify-btn');
         const calcBtn = document.getElementById('calc-btn');
         const msgInput = document.getElementById('user-msg');
         const persistentList = document.getElementById('persistent-echo-list');
+        const caDisplay = document.getElementById('ca-text');
+        
+        // Update the display text with the new CA
+        caDisplay.innerText = WAVE_CA;
 
         const defaultSignals = ["WAVE Neural Online", "Watching Whales...", "LFG $WAVE", "Smart Money Inflow"];
 
@@ -127,7 +132,8 @@
                 if (isNaN(cap) || isNaN(rsk)) return;
                 const size = (cap * (rsk / 100)) / vol;
                 document.getElementById('result-box').classList.remove('hidden');
-                document.getElementById('result-text').innerHTML = `SIZE: ${size.toFixed(3)} SOL<br><span class="text-[8px] text-white/30 uppercase mt-2 block italic">Neural Logic: Sodo & Prudente.</span>`;
+                // Result text is now fully English
+                document.getElementById('result-text').innerHTML = `RECOMMENDED SIZE: ${size.toFixed(3)} SOL<br><span class="text-[8px] text-white/30 uppercase mt-2 block italic">Neural Logic: Sodo & Prudente.</span>`;
             });
         }
     });
