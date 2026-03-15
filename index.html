@@ -88,52 +88,51 @@
             const status = document.getElementById('verify-status');
 
             if (!walletStr) return;
-            status.innerText = "Neural Scan: Verifica possesso $WAVE...";
+            status.innerText = "Neural Scan: Validazione Crittografica...";
             verifyBtn.disabled = true;
 
-            // Nodi RPC per verifica incrociata immediata
-            const rpcNodes = [
-                "https://api.mainnet-beta.solana.com",
-                "https://solana-mainnet.rpc.extrnode.com",
-                "https://rpc.ankr.com/solana"
-            ];
-
             try {
-                // 1. Controllo formale indirizzo (se cambi una lettera, esplode qui)
-                const pubKey = new solanaWeb3.PublicKey(walletStr);
+                // 1. RIGIDA VALIDAZIONE MATEMATICA (Checksum)
+                // Se l'indirizzo è inventato o modificato, questo blocco lo ferma subito
+                let pubKey;
+                try {
+                    pubKey = new solanaWeb3.PublicKey(walletStr);
+                    const isReal = solanaWeb3.PublicKey.isOnCurve(pubKey.toBytes());
+                    if (!isReal) throw new Error();
+                } catch (e) {
+                    status.innerText = "ACCESSO NEGATO: Indirizzo non esistente.";
+                    verifyBtn.disabled = false;
+                    return;
+                }
 
-                // 2. Scansione parallela: vince il primo che risponde
-                const checkBalances = rpcNodes.map(async (url) => {
-                    try {
-                        const conn = new solanaWeb3.Connection(url, "confirmed");
-                        const accounts = await conn.getParsedTokenAccountsByOwner(pubKey, {
-                            mint: new solanaWeb3.PublicKey(WAVE_CA)
-                        });
-                        if (accounts.value.length > 0) {
-                            return accounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-                        }
-                        return 0;
-                    } catch (e) { return null; }
+                // 2. VERIFICA POSSESSO REALE (Blockchain)
+                status.innerText = "Neural Scan: Ricerca $WAVE...";
+                const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
+                
+                const response = await connection.getParsedTokenAccountsByOwner(pubKey, {
+                    mint: new solanaWeb3.PublicKey(WAVE_CA)
                 });
 
-                const results = await Promise.all(checkBalances);
-                // Filtriamo i risultati validi (non nulli) e prendiamo il massimo trovato
-                const validResults = results.filter(r => r !== null);
-                const maxBalance = validResults.length > 0 ? Math.max(...validResults) : 0;
-
-                if (maxBalance > 0) {
-                    status.innerText = "Socio Confermato. Sblocco Terminale...";
-                    status.style.color = "#10f195";
-                    setTimeout(() => { 
-                        document.getElementById('lock-overlay').style.display = 'none'; 
-                    }, 800);
+                // Controllo se esiste l'account e se il saldo è > 0
+                if (response.value.length > 0) {
+                    const balance = response.value[0].account.data.parsed.info.tokenAmount.uiAmount;
+                    if (balance > 0) {
+                        status.innerText = "Socio Verificato. Sblocco in corso...";
+                        status.style.color = "#10f195";
+                        setTimeout(() => { 
+                            document.getElementById('lock-overlay').style.display = 'none'; 
+                        }, 800);
+                    } else {
+                        status.innerText = "ACCESSO NEGATO: Saldo $WAVE pari a zero.";
+                        verifyBtn.disabled = false;
+                    }
                 } else {
-                    status.innerText = "Accesso negato: Devi avere $WAVE nel wallet.";
+                    status.innerText = "ACCESSO NEGATO: Nessun token $WAVE rilevato.";
                     verifyBtn.disabled = false;
                 }
 
             } catch (err) {
-                status.innerText = "Indirizzo Wallet non valido.";
+                status.innerText = "Errore di connessione. Riprova.";
                 verifyBtn.disabled = false;
             }
         });
