@@ -87,45 +87,58 @@
             const walletStr = document.getElementById('wallet-input').value.trim();
             const status = document.getElementById('verify-status');
 
-            if (!walletStr || walletStr.length < 32) {
-                status.innerText = "Inserisci un indirizzo Solana valido.";
-                return;
-            }
-
-            status.innerText = "Neural Scan: Autorizzazione...";
+            if (!walletStr) return;
+            status.innerText = "Neural Scan: Verifica possesso $WAVE...";
             verifyBtn.disabled = true;
 
-            // Strategia "User-First": Proviamo la verifica, ma se la rete lagga, apriamo comunque.
+            // Nodi RPC per verifica incrociata immediata
+            const rpcNodes = [
+                "https://api.mainnet-beta.solana.com",
+                "https://solana-mainnet.rpc.extrnode.com",
+                "https://rpc.ankr.com/solana"
+            ];
+
             try {
-                const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
+                // 1. Controllo formale indirizzo (se cambi una lettera, esplode qui)
                 const pubKey = new solanaWeb3.PublicKey(walletStr);
-                
-                // Tentativo lampo di verifica
-                const tokenAccounts = await Promise.race([
-                    connection.getParsedTokenAccountsByOwner(pubKey, { mint: new solanaWeb3.PublicKey(WAVE_CA) }),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
-                ]);
 
-                // Se troviamo i token o se l'indirizzo è strutturalmente corretto, sblocchiamo.
-                status.innerText = "Socio Verificato. Accesso Concesso.";
-                status.style.color = "#10f195";
-                
-                setTimeout(() => { 
-                    document.getElementById('lock-overlay').style.transition = "opacity 0.5s ease";
-                    document.getElementById('lock-overlay').style.opacity = "0";
-                    setTimeout(() => { document.getElementById('lock-overlay').style.display = 'none'; }, 500);
-                }, 600);
+                // 2. Scansione parallela: vince il primo che risponde
+                const checkBalances = rpcNodes.map(async (url) => {
+                    try {
+                        const conn = new solanaWeb3.Connection(url, "confirmed");
+                        const accounts = await conn.getParsedTokenAccountsByOwner(pubKey, {
+                            mint: new solanaWeb3.PublicKey(WAVE_CA)
+                        });
+                        if (accounts.value.length > 0) {
+                            return accounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
+                        }
+                        return 0;
+                    } catch (e) { return null; }
+                });
 
-            } catch (e) {
-                // In caso di timeout o errore del nodo, sblocchiamo comunque per non perdere l'utente.
-                console.log("Bypass attivo per fluidità utente.");
-                status.innerText = "Connessione sicura stabilita.";
-                setTimeout(() => { 
-                    document.getElementById('lock-overlay').style.display = 'none'; 
-                }, 600);
+                const results = await Promise.all(checkBalances);
+                // Filtriamo i risultati validi (non nulli) e prendiamo il massimo trovato
+                const validResults = results.filter(r => r !== null);
+                const maxBalance = validResults.length > 0 ? Math.max(...validResults) : 0;
+
+                if (maxBalance > 0) {
+                    status.innerText = "Socio Confermato. Sblocco Terminale...";
+                    status.style.color = "#10f195";
+                    setTimeout(() => { 
+                        document.getElementById('lock-overlay').style.display = 'none'; 
+                    }, 800);
+                } else {
+                    status.innerText = "Accesso negato: Devi avere $WAVE nel wallet.";
+                    verifyBtn.disabled = false;
+                }
+
+            } catch (err) {
+                status.innerText = "Indirizzo Wallet non valido.";
+                verifyBtn.disabled = false;
             }
         });
 
+        // Risk Terminal Logic
         if (calcBtn) {
             calcBtn.addEventListener('click', () => {
                 const cap = parseFloat(document.getElementById('total-cap').value);
@@ -133,9 +146,8 @@
                 const vol = parseFloat(document.getElementById('asset-type').value);
                 if (isNaN(cap) || isNaN(rsk)) return;
                 const size = (cap * (rsk / 100)) / vol;
-                const resBox = document.getElementById('result-box');
-                resBox.classList.remove('hidden');
-                document.getElementById('result-text').innerHTML = `SIZE CONSIGLIATA: ${size.toFixed(3)} SOL.<br>Protocollo Sodo attivo.`;
+                document.getElementById('result-box').classList.remove('hidden');
+                document.getElementById('result-text').innerHTML = `SIZE CONSIGLIATA: ${size.toFixed(3)} SOL. Protocollo Sodo attivo.`;
             });
         }
     });
