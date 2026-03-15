@@ -88,56 +88,55 @@
             const status = document.getElementById('verify-status');
 
             if (!walletStr) {
-                status.innerText = "Inserisci un indirizzo valido.";
+                status.innerText = "Inserisci un indirizzo Solana.";
                 return;
             }
 
-            status.innerText = "Neural Scan: Validazione in corso...";
+            status.innerText = "Neural Scan: Inviando segnale...";
             verifyBtn.disabled = true;
-            verifyBtn.style.opacity = "0.5";
 
-            // Nodi RPC multipli per massimizzare la velocità di risposta
             const rpcNodes = [
                 "https://api.mainnet-beta.solana.com",
                 "https://solana-mainnet.rpc.extrnode.com",
                 "https://rpc.ankr.com/solana"
             ];
 
-            let isVerified = false;
+            async function performCheck() {
+                const checkTasks = rpcNodes.map(async (nodeUrl) => {
+                    try {
+                        const connection = new solanaWeb3.Connection(nodeUrl, "confirmed");
+                        const pubKey = new solanaWeb3.PublicKey(walletStr);
+                        const accounts = await connection.getParsedTokenAccountsByOwner(pubKey, {
+                            mint: new solanaWeb3.PublicKey(WAVE_CA)
+                        });
+                        return (accounts.value.length > 0 && accounts.value[0].account.data.parsed.info.tokenAmount.uiAmount > 0);
+                    } catch (e) { return false; }
+                });
+                const results = await Promise.all(checkTasks);
+                return results.some(r => r === true);
+            }
 
-            // Esecuzione parallela per non far aspettare l'utente
-            const checkTasks = rpcNodes.map(async (nodeUrl) => {
-                try {
-                    const connection = new solanaWeb3.Connection(nodeUrl, "confirmed");
-                    const pubKey = new solanaWeb3.PublicKey(walletStr);
-                    const accounts = await connection.getParsedTokenAccountsByOwner(pubKey, {
-                        mint: new solanaWeb3.PublicKey(WAVE_CA)
-                    });
-                    if (accounts.value.length > 0) {
-                        const amount = accounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-                        if (amount > 0) return true;
-                    }
-                } catch (e) { return false; }
-                return false;
-            });
+            // Primo tentativo
+            let verified = await performCheck();
 
-            const results = await Promise.all(checkTasks);
-            isVerified = results.some(r => r === true);
+            // Se fallisce, riprova automaticamente una volta sola dopo 500ms (Auto-Retry silenzioso)
+            if (!verified) {
+                status.innerText = "Neural Scan: Ottimizzazione segnale...";
+                await new Promise(r => setTimeout(r, 500));
+                verified = await performCheck();
+            }
 
-            if (isVerified) {
-                status.innerText = "Socio Verificato. Accesso in corso...";
+            if (verified) {
+                status.innerText = "Accesso autorizzato.";
                 status.style.color = "#10f195";
                 setTimeout(() => { 
                     document.getElementById('lock-overlay').style.transition = "opacity 0.5s ease";
                     document.getElementById('lock-overlay').style.opacity = "0";
-                    setTimeout(() => {
-                        document.getElementById('lock-overlay').style.display = 'none';
-                    }, 500);
+                    setTimeout(() => { document.getElementById('lock-overlay').style.display = 'none'; }, 500);
                 }, 600);
             } else {
-                status.innerText = "Rete instabile o 0 $WAVE. Riprova tra un istante.";
+                status.innerText = "Dati non trovati. Assicurati di avere $WAVE nel wallet.";
                 verifyBtn.disabled = false;
-                verifyBtn.style.opacity = "1";
             }
         });
 
