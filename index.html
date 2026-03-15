@@ -26,6 +26,15 @@
         </div>
         <h1 class="text-6xl font-black font-vision tracking-tighter uppercase italic neon-text">$WAVE MOTOR</h1>
         <p class="text-[10px] tracking-[0.3em] text-white/40 mt-2 uppercase italic">Solana Neural Interface v3.5</p>
+        
+        <div class="mt-6 max-w-xs mx-auto space-y-2">
+            <p class="text-[11px] text-emerald-400/80 font-vision leading-relaxed uppercase tracking-wider italic">
+                $WAVE is a Solana-native core engineered to bridge the neural gap. Ride the flow with an AI-architected engine without compromising the human variable.
+            </p>
+            <p class="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em]">
+                Stay on these frequencies. Have fun.
+            </p>
+        </div>
     </header>
 
     <main class="w-full max-w-md space-y-6">
@@ -88,7 +97,6 @@
         const persistentList = document.getElementById('persistent-echo-list');
         const overlay = document.getElementById('lock-overlay');
 
-        // FUNZIONE DI CARICAMENTO FEED GLOBALE
         const loadGlobalEcho = async () => {
             const { data, error } = await _supabase
                 .from('messages')
@@ -100,10 +108,8 @@
             }
         };
 
-        // Caricamento iniziale
         loadGlobalEcho();
 
-        // Realtime
         _supabase.channel('public:messages').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => {
             loadGlobalEcho();
         }).subscribe();
@@ -114,21 +120,17 @@
             setTimeout(() => { document.getElementById('copy-btn').innerText = 'Copy CA'; }, 2000);
         };
 
-        // LOGICA DI INVIO CORRETTA
         verifyBtn.addEventListener('click', async () => {
             const signal = msgInput.value.trim() || "Signal Synchronized";
             verifyBtn.innerText = "BROADCASTING...";
             verifyBtn.disabled = true;
 
-            // 1. Aspetta che l'inserimento sia completato nel DB
             const { error } = await _supabase.from('messages').insert([{ content: signal }]);
 
             if (!error) {
-                // 2. Forza il ricaricamento del feed prima di chiudere l'overlay
                 await loadGlobalEcho();
             }
 
-            // 3. Animazione di sblocco
             setTimeout(() => {
                 overlay.style.transition = "all 0.6s ease-in-out";
                 overlay.style.opacity = "0";
