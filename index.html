@@ -69,23 +69,39 @@
         </div>
     </main>
 
-    <script>
-        const WAVE_CA = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump";
+   <script>
+    const WAVE_CA = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump";
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const verifyBtn = document.getElementById('verify-btn');
-            
-            verifyBtn.addEventListener('click', async () => {
-                const walletStr = document.getElementById('wallet-input').value.trim();
-                const status = document.getElementById('verify-status');
+    document.addEventListener('DOMContentLoaded', () => {
+        const verifyBtn = document.getElementById('verify-btn');
+        const calcBtn = document.getElementById('calc-btn');
 
-                if (!walletStr) return;
-                status.innerText = "Connecting to Solana Mainnet...";
-                verifyBtn.disabled = true;
+        window.copyCA = function() {
+            navigator.clipboard.writeText(WAVE_CA);
+            const btn = document.getElementById('copy-btn');
+            btn.innerText = 'Copied!';
+            setTimeout(() => { btn.innerText = 'Copy CA'; }, 2000);
+        };
 
+        verifyBtn.addEventListener('click', async () => {
+            const walletStr = document.getElementById('wallet-input').value.trim();
+            const status = document.getElementById('verify-status');
+
+            if (!walletStr) return;
+            status.innerText = "Neural Scan in progress...";
+            verifyBtn.disabled = true;
+
+            // Proviamo con due diversi nodi per massima sicurezza
+            const rpcEndpoints = [
+                "https://api.mainnet-beta.solana.com",
+                "https://solana-mainnet.rpc.extrnode.com"
+            ];
+
+            let verified = false;
+
+            for (let url of rpcEndpoints) {
                 try {
-                    // Usiamo un endpoint alternativo per evitare congestione
-                    const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
+                    const connection = new solanaWeb3.Connection(url, "confirmed");
                     const pubKey = new solanaWeb3.PublicKey(walletStr);
                     
                     const tokenAccounts = await connection.getParsedTokenAccountsByOwner(pubKey, {
@@ -93,35 +109,39 @@
                     });
 
                     if (tokenAccounts.value.length > 0) {
-                        status.innerText = "WAVE Detected. Opening Terminal...";
-                        setTimeout(() => { document.getElementById('lock-overlay').style.display = 'none'; }, 600);
-                    } else {
-                        status.innerText = "No $WAVE found in this wallet. Buy some first.";
-                        verifyBtn.disabled = false;
+                        const balance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
+                        if (balance > 0) {
+                            verified = true;
+                            break; 
+                        }
                     }
                 } catch (e) {
-                    status.innerText = "Error: Use the address from your screenshot.";
-                    verifyBtn.disabled = false;
+                    console.log("Nodo occupato, provo il prossimo...");
+                    continue;
                 }
-            });
+            }
 
-            document.getElementById('calc-btn').addEventListener('click', () => {
-                const cap = parseFloat(document.getElementById('total-cap').value);
-                const rsk = parseFloat(document.getElementById('risk-perc').value);
-                const vol = parseFloat(document.getElementById('asset-type').value);
-                if (isNaN(cap) || isNaN(rsk)) return;
-                const res = (cap * (rsk / 100)) / vol;
-                document.getElementById('result-box').classList.remove('hidden');
-                document.getElementById('result-text').innerHTML = `SIZE: ${res.toFixed(3)} SOL. Protocollo Sodo attivo.`;
-            });
+            if (verified) {
+                status.innerText = "Access Granted. Welcome.";
+                setTimeout(() => { 
+                    document.getElementById('lock-overlay').style.display = 'none'; 
+                }, 600);
+            } else {
+                status.innerText = "Check failed: Buy $WAVE or try again.";
+                verifyBtn.disabled = false;
+            }
         });
 
-        function copyCA() {
-            navigator.clipboard.writeText(WAVE_CA);
-            const btn = document.getElementById('copy-btn');
-            btn.innerText = 'Copied!';
-            setTimeout(() => { btn.innerText = 'Copy CA'; }, 2000);
-        }
-    </script>
+        calcBtn.addEventListener('click', () => {
+            const cap = parseFloat(document.getElementById('total-cap').value);
+            const rsk = parseFloat(document.getElementById('risk-perc').value);
+            const vol = parseFloat(document.getElementById('asset-type').value);
+            if (isNaN(cap) || isNaN(rsk)) return;
+            const res = (cap * (rsk / 100)) / vol;
+            document.getElementById('result-box').classList.remove('hidden');
+            document.getElementById('result-text').innerHTML = `SIZE: ${res.toFixed(3)} SOL. Protocollo Sodo attivo.`;
+        });
+    });
+</script>
 </body>
 </html>
