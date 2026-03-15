@@ -76,7 +76,6 @@
     </main>
 
 <script>
-    // Inserito l'indirizzo del contratto $WAVE corretto
     const WAVE_CA = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump"; 
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -85,10 +84,67 @@
         const msgInput = document.getElementById('user-msg');
         const persistentList = document.getElementById('persistent-echo-list');
         const caDisplay = document.getElementById('ca-text');
+        const overlay = document.getElementById('lock-overlay');
         
         caDisplay.innerText = WAVE_CA;
 
         const defaultSignals = ["WAVE Neural Online", "Watching Whales...", "LFG $WAVE", "Smart Money Inflow"];
 
         const updateBoard = () => {
-            const signals = JSON.parse(localStorage.getItem('wave_echo_signals') || JSON.
+            const signals = JSON.parse(localStorage.getItem('wave_echo_signals') || JSON.stringify(defaultSignals));
+            persistentList.innerHTML = signals.slice().reverse().map(s => `<li class="border-l border-emerald-500/30 pl-2 py-0.5 italic truncate opacity-80 hover:opacity-100 transition-opacity">${s}</li>`).join('');
+        };
+        updateBoard();
+
+        window.copyCA = function() {
+            navigator.clipboard.writeText(WAVE_CA);
+            document.getElementById('copy-btn').innerText = 'Copied!';
+            setTimeout(() => { document.getElementById('copy-btn').innerText = 'Copy CA'; }, 2000);
+        };
+
+        // ACCESS LOGIC
+        verifyBtn.addEventListener('click', () => {
+            const signal = msgInput.value.trim() || "User Synchronized";
+            
+            let signals = JSON.parse(localStorage.getItem('wave_echo_signals') || JSON.stringify(defaultSignals));
+            signals.push(signal);
+            if(signals.length > 10) signals.shift();
+            localStorage.setItem('wave_echo_signals', JSON.stringify(signals));
+
+            updateBoard();
+            
+            verifyBtn.innerText = "BROADCASTING...";
+            verifyBtn.disabled = true;
+
+            setTimeout(() => {
+                overlay.style.transition = "all 0.6s ease-in-out";
+                overlay.style.opacity = "0";
+                overlay.style.pointerEvents = "none"; 
+                
+                setTimeout(() => { 
+                    overlay.style.display = 'none'; 
+                }, 600);
+            }, 800);
+        });
+
+        // CALC LOGIC
+        if (calcBtn) {
+            calcBtn.addEventListener('click', () => {
+                const cap = parseFloat(document.getElementById('total-cap').value);
+                const rsk = parseFloat(document.getElementById('risk-perc').value);
+                const vol = parseFloat(document.getElementById('asset-type').value);
+                
+                if (isNaN(cap) || isNaN(rsk)) return;
+
+                const size = (cap * (rsk / 100)) / vol;
+                const resultBox = document.getElementById('result-box');
+                const resultText = document.getElementById('result-text');
+                
+                resultBox.classList.remove('hidden');
+                resultText.innerHTML = `RECOMMENDED SIZE: ${size.toFixed(3)} SOL<br><span class="text-[8px] text-white/30 uppercase mt-2 block italic">Neural Logic: Sodo & Prudente.</span>`;
+            });
+        }
+    });
+</script>
+</body>
+</html>
