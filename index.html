@@ -94,9 +94,8 @@
 
             status.innerText = "Scansione neurale in corso...";
             verifyBtn.disabled = true;
-            verifyBtn.style.opacity = "0.5";
 
-            // Lista di nodi pubblici per rotazione automatica (Ridondanza)
+            // Rotazione automatica dei nodi per sblocco immediato al 1° click
             const rpcNodes = [
                 "https://api.mainnet-beta.solana.com",
                 "https://solana-mainnet.rpc.extrnode.com",
@@ -118,45 +117,36 @@
                         const balance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
                         if (balance > 0) {
                             isVerified = true;
-                            break; // Trovato! Esci dal ciclo
+                            break; 
                         }
                     }
                 } catch (e) {
-                    console.log(`Nodo ${nodeUrl} non raggiungibile, provo il prossimo...`);
-                    continue; 
+                    continue; // Se un nodo fallisce, passa al prossimo istantaneamente
                 }
             }
 
             if (isVerified) {
-                status.innerText = "Accesso autorizzato. Benvenuto.";
-                status.style.color = "#10f195";
+                status.innerText = "Accesso autorizzato.";
                 setTimeout(() => { 
                     document.getElementById('lock-overlay').style.opacity = "0";
                     setTimeout(() => {
                         document.getElementById('lock-overlay').style.display = 'none';
                     }, 500);
-                }, 800);
+                }, 500);
             } else {
-                status.innerText = "Nessun $WAVE rilevato in questo wallet.";
+                status.innerText = "Nessun $WAVE rilevato. Riprova tra pochi secondi.";
                 verifyBtn.disabled = false;
-                verifyBtn.style.opacity = "1";
             }
         });
 
-        // Risk Terminal Logic
         calcBtn.addEventListener('click', () => {
             const cap = parseFloat(document.getElementById('total-cap').value);
             const rsk = parseFloat(document.getElementById('risk-perc').value);
             const vol = parseFloat(document.getElementById('asset-type').value);
-            
             if (isNaN(cap) || isNaN(rsk)) return;
-
             const size = (cap * (rsk / 100)) / vol;
-            const resBox = document.getElementById('result-box');
-            resBox.classList.remove('hidden');
-            document.getElementById('result-text').innerHTML = `
-                <span class="text-emerald-400 font-bold uppercase">Size Consigliata:</span> ${size.toFixed(3)} SOL<br><br>
-                <span class="text-[9px] text-white/40 italic uppercase">Protocollo Sodo e Prudente attivo.</span>`;
+            document.getElementById('result-box').classList.remove('hidden');
+            document.getElementById('result-text').innerHTML = `SIZE CONSIGLIATA: ${size.toFixed(3)} SOL. Protocollo Sodo attivo.`;
         });
     });
 </script>
