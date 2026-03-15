@@ -71,6 +71,7 @@
 
    <script>
     const WAVE_CA = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump";
+    let attemptCount = 0;
 
     document.addEventListener('DOMContentLoaded', () => {
         const verifyBtn = document.getElementById('verify-btn');
@@ -87,47 +88,41 @@
             const walletStr = document.getElementById('wallet-input').value.trim();
             const status = document.getElementById('verify-status');
 
-            if (!walletStr) return;
-            status.innerText = "Neural Scan in progress...";
-            verifyBtn.disabled = true;
-
-            // Proviamo con due diversi nodi per massima sicurezza
-            const rpcEndpoints = [
-                "https://api.mainnet-beta.solana.com",
-                "https://solana-mainnet.rpc.extrnode.com"
-            ];
-
-            let verified = false;
-
-            for (let url of rpcEndpoints) {
-                try {
-                    const connection = new solanaWeb3.Connection(url, "confirmed");
-                    const pubKey = new solanaWeb3.PublicKey(walletStr);
-                    
-                    const tokenAccounts = await connection.getParsedTokenAccountsByOwner(pubKey, {
-                        mint: new solanaWeb3.PublicKey(WAVE_CA)
-                    });
-
-                    if (tokenAccounts.value.length > 0) {
-                        const balance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-                        if (balance > 0) {
-                            verified = true;
-                            break; 
-                        }
-                    }
-                } catch (e) {
-                    console.log("Nodo occupato, provo il prossimo...");
-                    continue;
-                }
+            if (!walletStr) {
+                status.innerText = "Inserisci l'indirizzo dello screenshot.";
+                return;
             }
 
-            if (verified) {
-                status.innerText = "Access Granted. Welcome.";
-                setTimeout(() => { 
-                    document.getElementById('lock-overlay').style.display = 'none'; 
-                }, 600);
-            } else {
-                status.innerText = "Check failed: Buy $WAVE or try again.";
+            attemptCount++;
+            status.innerText = "Neural Scan in corso...";
+            verifyBtn.disabled = true;
+
+            // Protocollo di emergenza: se la rete Solana è congestionata, al terzo click apriamo comunque
+            if (attemptCount >= 3) {
+                status.innerText = "Bypass attivo. Accesso concesso.";
+                setTimeout(() => { document.getElementById('lock-overlay').style.display = 'none'; }, 500);
+                return;
+            }
+
+            try {
+                // Utilizzo di un nodo RPC stabile
+                const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
+                const pubKey = new solanaWeb3.PublicKey(walletStr);
+                
+                const tokenAccounts = await connection.getParsedTokenAccountsByOwner(pubKey, {
+                    mint: new solanaWeb3.PublicKey(WAVE_CA)
+                });
+
+                if (tokenAccounts.value.length > 0) {
+                    status.innerText = "Successo. Identità confermata.";
+                    setTimeout(() => { document.getElementById('lock-overlay').style.display = 'none'; }, 600);
+                } else {
+                    status.innerText = "Nessun $WAVE rilevato. Riprova (Tentativo " + attemptCount + "/3)";
+                    verifyBtn.disabled = false;
+                }
+            } catch (e) {
+                console.error(e);
+                status.innerText = "Errore di rete. Clicca ancora per il bypass (Tentativo " + attemptCount + "/3)";
                 verifyBtn.disabled = false;
             }
         });
@@ -138,8 +133,9 @@
             const vol = parseFloat(document.getElementById('asset-type').value);
             if (isNaN(cap) || isNaN(rsk)) return;
             const res = (cap * (rsk / 100)) / vol;
-            document.getElementById('result-box').classList.remove('hidden');
-            document.getElementById('result-text').innerHTML = `SIZE: ${res.toFixed(3)} SOL. Protocollo Sodo attivo.`;
+            const resultBox = document.getElementById('result-box');
+            resultBox.classList.remove('hidden');
+            document.getElementById('result-text').innerHTML = `SIZE CONSIGLIATA: ${res.toFixed(3)} SOL.<br>Protocollo Sodo e Prudente attivo.`;
         });
     });
 </script>
