@@ -52,7 +52,7 @@
                 <div class="border-b border-white/5 pb-4">
                     <p class="text-[8px] text-emerald-400/60 uppercase font-bold mb-3 tracking-widest italic">NEURAL PULSE FEED:</p>
                     <ul id="persistent-echo-list" class="text-[10px] font-mono text-white/40 space-y-2 overflow-y-auto max-h-[80px] pr-2 list-none">
-                        </ul>
+                    </ul>
                 </div>
 
                 <div class="space-y-4">
@@ -88,6 +88,7 @@
         const persistentList = document.getElementById('persistent-echo-list');
         const overlay = document.getElementById('lock-overlay');
 
+        // FUNZIONE DI CARICAMENTO FEED GLOBALE
         const loadGlobalEcho = async () => {
             const { data, error } = await _supabase
                 .from('messages')
@@ -99,8 +100,10 @@
             }
         };
 
+        // Caricamento iniziale dei dati
         loadGlobalEcho();
 
+        // Configurazione Realtime per nuovi messaggi
         _supabase.channel('public:messages').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => {
             loadGlobalEcho();
         }).subscribe();
@@ -116,6 +119,7 @@
             verifyBtn.innerText = "BROADCASTING...";
             verifyBtn.disabled = true;
 
+            // Invio del segnale al DB globale
             await _supabase.from('messages').insert([{ content: signal }]);
 
             setTimeout(() => {
@@ -132,6 +136,8 @@
                 const rsk = parseFloat(document.getElementById('risk-perc').value);
                 const vol = parseFloat(document.getElementById('asset-type').value);
                 if (isNaN(cap) || isNaN(rsk)) return;
+                
+                // Matematica della prudenza (Protocollo Sodo & Prudente)
                 const size = (cap * (rsk / 100)) / vol;
                 document.getElementById('result-box').classList.remove('hidden');
                 document.getElementById('result-text').innerHTML = `RECOMMENDED SIZE: ${size.toFixed(3)} SOL<br><span class="text-[8px] text-white/30 uppercase mt-2 block italic">Neural Logic: Sodo & Prudente.</span>`;
