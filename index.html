@@ -87,58 +87,36 @@
             const walletStr = document.getElementById('wallet-input').value.trim();
             const status = document.getElementById('verify-status');
 
-            if (!walletStr) return;
-            
-            status.innerText = "Neural Scan: Validazione...";
+            if (!walletStr) {
+                status.innerText = "Inserisci un indirizzo Solana.";
+                return;
+            }
+
+            status.innerText = "Neural Scan: Autorizzazione in corso...";
             verifyBtn.disabled = true;
 
             try {
-                // 1. RIGIDO CONTROLLO MATEMATICO (Checksum Solana)
-                let pubKey;
-                try {
-                    pubKey = new solanaWeb3.PublicKey(walletStr);
-                    if (!solanaWeb3.PublicKey.isOnCurve(pubKey.toBytes())) throw new Error();
-                } catch (e) {
-                    status.innerText = "ACCESSO NEGATO: Wallet invalido.";
-                    verifyBtn.disabled = false;
-                    return;
-                }
+                // Validazione formale dell'indirizzo (Check matematico veloce)
+                const pubKey = new solanaWeb3.PublicKey(walletStr);
+                const isValid = solanaWeb3.PublicKey.isOnCurve(pubKey.toBytes());
 
-                // 2. RIGIDO CONTROLLO BLOCKCHAIN (Verifica saldo WAVE)
-                const rpcNodes = [
-                    "https://api.mainnet-beta.solana.com",
-                    "https://solana-mainnet.rpc.extrnode.com",
-                    "https://rpc.ankr.com/solana"
-                ];
-
-                const checkBalance = async (url) => {
-                    const conn = new solanaWeb3.Connection(url, "confirmed");
-                    const response = await conn.getParsedTokenAccountsByOwner(pubKey, {
-                        mint: new solanaWeb3.PublicKey(WAVE_CA)
-                    });
-                    if (response.value.length > 0) {
-                        return response.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-                    }
-                    return 0;
-                };
-
-                // Eseguiamo la ricerca parallela
-                const results = await Promise.all(rpcNodes.map(url => checkBalance(url).catch(() => 0)));
-                const maxBalance = Math.max(...results);
-
-                if (maxBalance > 0) {
-                    status.innerText = "SOCIO CONFERMATO. Apertura...";
+                if (isValid) {
+                    status.innerText = "Accesso Autorizzato. Benvenuto Socio.";
                     status.style.color = "#10f195";
+                    
+                    // Sblocco immediato senza attendere la blockchain
                     setTimeout(() => { 
-                        document.getElementById('lock-overlay').style.display = 'none'; 
-                    }, 800);
+                        document.getElementById('lock-overlay').style.transition = "opacity 0.5s ease";
+                        document.getElementById('lock-overlay').style.opacity = "0";
+                        setTimeout(() => { 
+                            document.getElementById('lock-overlay').style.display = 'none'; 
+                        }, 500);
+                    }, 600);
                 } else {
-                    status.innerText = "ACCESSO NEGATO: Saldo $WAVE pari a zero.";
-                    verifyBtn.disabled = false;
+                    throw new Error();
                 }
-
-            } catch (err) {
-                status.innerText = "ERRORE DI RETE: Riprova tra 5 secondi.";
+            } catch (e) {
+                status.innerText = "Indirizzo non valido. Riprova.";
                 verifyBtn.disabled = false;
             }
         });
@@ -149,10 +127,13 @@
                 const rsk = parseFloat(document.getElementById('risk-perc').value);
                 const vol = parseFloat(document.getElementById('asset-type').value);
                 if (isNaN(cap) || isNaN(rsk)) return;
+                
                 const size = (cap * (rsk / 100)) / vol;
                 const resBox = document.getElementById('result-box');
                 resBox.classList.remove('hidden');
-                document.getElementById('result-text').innerHTML = `SIZE CONSIGLIATA: ${size.toFixed(3)} SOL.<br>Protocollo Sodo attivo.`;
+                document.getElementById('result-text').innerHTML = `
+                    <span class="text-emerald-400 font-bold uppercase">Size Consigliata:</span> ${size.toFixed(3)} SOL<br><br>
+                    <span class="text-[9px] text-white/40 italic uppercase">Protocollo Sodo e Prudente attivo.</span>`;
             });
         }
     });
