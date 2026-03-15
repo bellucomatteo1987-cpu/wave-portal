@@ -88,56 +88,49 @@
             const status = document.getElementById('verify-status');
 
             if (!walletStr) return;
-            status.innerText = "Neural Scan: Validazione Crittografica...";
+            status.innerText = "Neural Scan: Analisi Blockchain...";
             verifyBtn.disabled = true;
 
             try {
-                // 1. RIGIDA VALIDAZIONE MATEMATICA (Checksum)
-                // Se l'indirizzo è inventato o modificato, questo blocco lo ferma subito
-                let pubKey;
-                try {
-                    pubKey = new solanaWeb3.PublicKey(walletStr);
-                    const isReal = solanaWeb3.PublicKey.isOnCurve(pubKey.toBytes());
-                    if (!isReal) throw new Error();
-                } catch (e) {
-                    status.innerText = "ACCESSO NEGATO: Indirizzo non esistente.";
-                    verifyBtn.disabled = false;
-                    return;
-                }
-
-                // 2. VERIFICA POSSESSO REALE (Blockchain)
-                status.innerText = "Neural Scan: Ricerca $WAVE...";
+                // 1. Validazione Formato
+                const pubKey = new solanaWeb3.PublicKey(walletStr);
+                
+                // 2. Connessione ad alta priorità
                 const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
                 
+                // Usiamo getTokenAccountsByOwner che è più granulare
                 const response = await connection.getParsedTokenAccountsByOwner(pubKey, {
                     mint: new solanaWeb3.PublicKey(WAVE_CA)
                 });
 
-                // Controllo se esiste l'account e se il saldo è > 0
-                if (response.value.length > 0) {
+                // Se non trova l'account del token, potrebbe essere un problema di sincronizzazione del nodo
+                // Quindi facciamo un controllo incrociato sulle firme (opzionale, ma restiamo sul sodo)
+                
+                let hasWave = false;
+                if (response.value && response.value.length > 0) {
                     const balance = response.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-                    if (balance > 0) {
-                        status.innerText = "Socio Verificato. Sblocco in corso...";
-                        status.style.color = "#10f195";
-                        setTimeout(() => { 
-                            document.getElementById('lock-overlay').style.display = 'none'; 
-                        }, 800);
-                    } else {
-                        status.innerText = "ACCESSO NEGATO: Saldo $WAVE pari a zero.";
-                        verifyBtn.disabled = false;
-                    }
+                    if (balance > 0) hasWave = true;
+                }
+
+                if (hasWave) {
+                    status.innerText = "Socio Verificato. Accesso in corso...";
+                    status.style.color = "#10f195";
+                    setTimeout(() => { 
+                        document.getElementById('lock-overlay').style.display = 'none'; 
+                    }, 800);
                 } else {
-                    status.innerText = "ACCESSO NEGATO: Nessun token $WAVE rilevato.";
+                    // SE FALLISCE: Diamo un messaggio più specifico
+                    status.innerText = "Saldo $WAVE non rilevato su questo indirizzo.";
                     verifyBtn.disabled = false;
                 }
 
             } catch (err) {
-                status.innerText = "Errore di connessione. Riprova.";
+                // Se l'indirizzo è palesemente falso o la rete è giù
+                status.innerText = "Indirizzo non valido o errore di rete.";
                 verifyBtn.disabled = false;
             }
         });
 
-        // Risk Terminal Logic
         if (calcBtn) {
             calcBtn.addEventListener('click', () => {
                 const cap = parseFloat(document.getElementById('total-cap').value);
@@ -146,7 +139,7 @@
                 if (isNaN(cap) || isNaN(rsk)) return;
                 const size = (cap * (rsk / 100)) / vol;
                 document.getElementById('result-box').classList.remove('hidden');
-                document.getElementById('result-text').innerHTML = `SIZE CONSIGLIATA: ${size.toFixed(3)} SOL. Protocollo Sodo attivo.`;
+                document.getElementById('result-text').innerHTML = `SIZE CONSIGLIATA: ${size.toFixed(3)} SOL.<br>Protocollo Sodo attivo.`;
             });
         }
     });
