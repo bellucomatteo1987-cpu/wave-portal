@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$WAVE | Neural Motor</title>
+    <title>WAVE | Neural Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
@@ -22,17 +22,17 @@
 
     <header class="mb-8 text-center">
         <div class="mb-5 inline-block">
-            <img src="logo.png" alt="$WAVE Logo" class="w-32 h-32 rounded-full neon-border object-cover mx-auto">
+            <img src="logo.png" alt="WAVE Logo" class="w-32 h-32 rounded-full neon-border object-cover mx-auto">
         </div>
-        <h1 class="text-6xl font-black font-vision tracking-tighter uppercase italic neon-text">$WAVE MOTOR</h1>
-        <p class="text-[10px] tracking-[0.3em] text-white/40 mt-2 uppercase italic">Solana Neural Interface v3.5</p>
+        <h1 class="text-6xl font-black font-vision tracking-tighter uppercase italic neon-text">WAVE INTERFACE</h1>
+        <p class="text-[10px] tracking-[0.3em] text-white/40 mt-2 uppercase italic">Solana Neural Monitoring v3.5</p>
         
         <div class="mt-6 max-w-xs mx-auto space-y-2">
             <p class="text-[11px] text-emerald-400/80 font-vision leading-relaxed uppercase tracking-wider italic">
-                $WAVE is a Solana-native core engineered to bridge the neural gap. Ride the flow with an AI-architected engine without compromising the human variable.
+                Bridging the neural gap in the Solana ecosystem. Real-time monitoring and AI-architected insights for the modern network.
             </p>
             <p class="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em]">
-                Stay on these frequencies. Have fun.
+                Stay on these frequencies.
             </p>
         </div>
     </header>
@@ -40,13 +40,8 @@
     <main class="w-full max-w-md space-y-6">
         <div class="neon-border rounded-3xl overflow-hidden bg-black p-1">
             <div class="terminal-container">
-                <iframe src="https://raydium.io/swap/?inputMint=sol&outputMint=2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump" title="Raydium Swap"></iframe>
+                <iframe src="https://raydium.io/swap/?inputMint=sol&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" title="Raydium Swap"></iframe>
             </div>
-        </div>
-
-        <div class="bg-white/5 border border-white/10 p-4 rounded-xl flex justify-between items-center group">
-            <code id="ca-text" class="text-[10px] text-emerald-400/70 truncate mr-4 italic">2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump</code>
-            <button onclick="copyCA()" id="copy-btn" class="text-[10px] uppercase font-bold bg-emerald-400 text-black px-3 py-1.5 rounded hover:bg-white transition-all">Copy CA</button>
         </div>
 
         <div class="bg-black border border-emerald-500/20 p-6 rounded-2xl relative overflow-hidden shadow-2xl">
@@ -65,7 +60,7 @@
                 </div>
 
                 <div class="space-y-4">
-                    <h3 class="text-xl font-bold font-vision text-emerald-400 uppercase italic text-center italic">Risk Terminal</h3>
+                    <h3 class="text-xl font-bold font-vision text-emerald-400 uppercase italic text-center">Risk Terminal</h3>
                     <div class="space-y-3">
                         <input type="number" id="total-cap" placeholder="Total SOL Balance" class="w-full p-3 rounded-lg text-xs bg-white/5 border border-white/10 text-white outline-none">
                         <input type="number" id="risk-perc" placeholder="Risk % (e.g. 1)" class="w-full p-3 rounded-lg text-xs bg-white/5 border border-white/10 text-white outline-none">
@@ -82,18 +77,13 @@
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-white/10 space-y-4">
-                    <h4 class="text-[9px] font-black font-vision text-emerald-400 uppercase tracking-[0.2em] italic">Operational Manual v1.0</h4>
+                    <h4 class="text-[9px] font-black font-vision text-emerald-400 uppercase tracking-[0.2em] italic">Operational Manual v1.1</h4>
                     <div class="space-y-3 text-[8px] uppercase tracking-widest leading-relaxed">
                         <div class="space-y-1">
                             <p class="text-white/80 font-bold underline italic">1. Risk Terminal Logic:</p>
-                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Total SOL:</span> Liquid ammunition.</p>
-                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Risk %:</span> Max capital loss per trade.</p>
-                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Multipliers:</span> Blue Chip (Stable) | Volatile (Meme) | Degen (Danger).</p>
-                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Recommended Size:</span> This is your Safety Allocation. If the result is > your balance, your risk settings are too high for your current ammunition.</p>
-                        </div>
-                        <div class="space-y-1">
-                            <p class="text-white/80 font-bold underline italic">2. Neural Pulse Feed:</p>
-                            <p class="text-white/40 italic leading-tight">Permanent signals broadcasted to the grid. Use for alpha alerts and sentiment tracking.</p>
+                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Total SOL:</span> Ammunition for operations.</p>
+                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Risk %:</span> Capital protection parameter.</p>
+                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Multipliers:</span> Calculated based on asset volatility.</p>
                         </div>
                     </div>
                 </div>
@@ -105,7 +95,6 @@
     const SUPABASE_URL = 'https://ojfplozwfidjwqwpwcdt.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_McakxoSphNnS09S5kcWhIg_iGo705zF';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    const WAVE_CA = "2VdMzwpQojoqWQmQYZrtwVChBGeoBz32m1KgdMjipump";
 
     document.addEventListener('DOMContentLoaded', () => {
         const verifyBtn = document.getElementById('verify-btn');
@@ -130,12 +119,6 @@
         _supabase.channel('public:messages').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => {
             loadGlobalEcho();
         }).subscribe();
-
-        window.copyCA = function() {
-            navigator.clipboard.writeText(WAVE_CA);
-            document.getElementById('copy-btn').innerText = 'Copied!';
-            setTimeout(() => { document.getElementById('copy-btn').innerText = 'Copy CA'; }, 2000);
-        };
 
         verifyBtn.addEventListener('click', async () => {
             const signal = msgInput.value.trim() || "Signal Synchronized";
@@ -163,10 +146,7 @@
                 const vol = parseFloat(document.getElementById('asset-type').value);
                 if (isNaN(cap) || isNaN(rsk)) return;
                 
-                // Calcolo Size Teorica
                 let size = (cap * (rsk / 100)) / vol;
-
-                // Tappo di Sicurezza: Protocollo Sodo & Prudente
                 let isMax = false;
                 if (size > cap) {
                     size = cap;
