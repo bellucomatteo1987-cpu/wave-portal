@@ -9,23 +9,10 @@
     <script src="https://terminal.jup.ag/main-v3.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000000; color: #ffffff; margin: 0; font-family: sans-serif; }
+        body { background-color: #000000; color: #ffffff; margin: 0; font-family: sans-serif; overflow-x: hidden; }
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 25px rgba(20, 241, 149, 0.1); }
         .neon-text { text-shadow: 0 0 10px rgba(20, 241, 149, 0.8); color: rgba(20, 241, 149, 1); }
         .font-vision { font-family: 'Space Grotesk', sans-serif; }
-        
-        /* FIX: Altezza minima e overflow visibile per permettere ai menu di aprirsi esternamente */
-        .terminal-container { 
-            width: 100%; 
-            min-height: 600px; 
-            background: transparent;
-            position: relative;
-            z-index: 50;
-        }
-        
-        /* Classe per forzare la visibilità dei menu a tendina */
-        .no-cut { overflow: visible !important; }
-
         #persistent-echo-list::-webkit-scrollbar { width: 4px; }
         #persistent-echo-list::-webkit-scrollbar-thumb { background: rgba(20, 241, 149, 0.3); border-radius: 10px; }
     </style>
@@ -41,15 +28,18 @@
     </header>
 
     <main class="w-full max-w-md space-y-6">
-        <div class="neon-border rounded-3xl bg-black p-1 no-cut">
-            <div id="integrated-terminal" class="terminal-container"></div>
+        
+        <div id="jupiter-terminal-button" class="w-full">
+            <button class="w-full py-6 neon-border rounded-2xl bg-black text-[#10f195] font-black font-vision uppercase tracking-widest hover:bg-[#10f195] hover:text-black transition-all shadow-[0_0_20px_rgba(16,241,149,0.2)]">
+                Launch Jupiter Swap
+            </button>
         </div>
 
         <div class="bg-black border border-emerald-500/20 p-6 rounded-2xl relative shadow-2xl">
-            <div id="lock-overlay" class="absolute inset-0 bg-black/95 backdrop-blur-md z-10 flex flex-col items-center justify-center p-6 text-center">
+            <div id="lock-overlay" class="absolute inset-0 bg-black/95 backdrop-blur-md z-10 flex flex-col items-center justify-center p-6 text-center rounded-2xl">
                 <h2 class="text-emerald-400 font-vision font-bold uppercase tracking-widest mb-1 text-sm italic">THE WAVE ECHO</h2>
                 <input type="text" id="user-msg" placeholder="Write a degen phrase..." maxlength="50" class="w-full p-3 rounded-lg mb-3 text-xs outline-none border border-white/10 bg-white/5 text-white focus:border-emerald-400">
-                <button id="verify-btn" class="w-full py-3 bg-[#10f195] text-black font-black rounded-lg text-[10px] uppercase tracking-widest hover:bg-white transition-all shadow-[0_0_15px_rgba(16,241,149,0.3)]">SEND & ACCESS</button>
+                <button id="verify-btn" class="w-full py-3 bg-[#10f195] text-black font-black rounded-lg text-[10px] uppercase tracking-widest">SEND & ACCESS</button>
             </div>
 
             <div class="space-y-6">
@@ -78,21 +68,18 @@
     const SUPABASE_KEY = 'sb_publishable_McakxoSphNnS09S5kcWhIg_iGo705zF';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Inizializzazione Jupiter con il tuo Referral ID
+    // Inizializzazione Jupiter in modalità Widget (Modal) per evitare i tagli grafici
     window.addEventListener('load', () => {
         if (window.Jupiter) {
             window.Jupiter.init({
-                displayMode: "integrated",
-                integratedTargetId: "integrated-terminal",
+                displayMode: "modal", // FIX: Questa modalità apre un popup che non viene mai tagliato
                 endpoint: "https://api.mainnet-beta.solana.com",
-                strictTokenList: false,
-                containerStyles: { zIndex: 100 }, 
-                formProps: {
-                    initialInputMint: "So11111111111111111111111111111111111111112", 
-                    initialOutputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-                },
                 referralAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa",
-                platformFeeBps: 20, 
+                platformFeeBps: 20,
+                formProps: {
+                    initialInputMint: "So11111111111111111111111111111111111111112",
+                    initialOutputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                }
             });
         }
     });
@@ -119,14 +106,11 @@
 
         verifyBtn.addEventListener('click', async () => {
             const signal = msgInput.value.trim() || "Signal Synchronized";
-            verifyBtn.innerText = "BROADCASTING...";
             const { error } = await _supabase.from('messages').insert([{ content: signal }]);
             if (!error) await loadGlobalEcho();
-            setTimeout(() => {
-                overlay.style.opacity = "0";
-                overlay.style.pointerEvents = "none";
-                setTimeout(() => { overlay.style.display = 'none'; }, 600);
-            }, 400); 
+            overlay.style.opacity = "0";
+            overlay.style.pointerEvents = "none";
+            setTimeout(() => { overlay.style.display = 'none'; }, 600);
         });
 
         calcBtn.addEventListener('click', () => {
@@ -135,7 +119,7 @@
             if (isNaN(cap) || isNaN(rsk)) return;
             let size = (cap * (rsk / 100));
             document.getElementById('result-box').classList.remove('hidden');
-            document.getElementById('result-text').innerHTML = `RECOMMENDED SIZE: ${size.toFixed(3)} SOL`;
+            document.getElementById('result-text').innerText = `RECOMMENDED SIZE: ${size.toFixed(3)} SOL`;
         });
     });
 </script>
