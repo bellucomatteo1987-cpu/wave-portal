@@ -13,8 +13,15 @@
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 25px rgba(20, 241, 149, 0.1); }
         .neon-text { text-shadow: 0 0 10px rgba(20, 241, 149, 0.8); color: rgba(20, 241, 149, 1); }
         .font-vision { font-family: 'Space Grotesk', sans-serif; }
-        /* Altezza adattata per il terminale Jupiter */
-        .terminal-container { width: 100%; min-height: 550px; background: #000; position: relative; }
+        
+        /* FIX: Altezza minima garantita e rimosso overflow per evitare tagli grafici */
+        .terminal-container { 
+            width: 100%; 
+            min-height: 580px; 
+            background: #000; 
+            position: relative;
+        }
+        
         #persistent-echo-list::-webkit-scrollbar { width: 4px; }
         #persistent-echo-list::-webkit-scrollbar-thumb { background: rgba(20, 241, 149, 0.3); border-radius: 10px; }
     </style>
@@ -30,7 +37,7 @@
     </header>
 
     <main class="w-full max-w-md space-y-6">
-        <div class="neon-border rounded-3xl overflow-hidden bg-black p-4">
+        <div class="neon-border rounded-3xl bg-black p-1">
             <div id="integrated-terminal" class="terminal-container"></div>
         </div>
 
@@ -72,7 +79,7 @@
     const SUPABASE_KEY = 'sb_publishable_McakxoSphNnS09S5kcWhIg_iGo705zF';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Inizializzazione Jupiter Terminal
+    // Inizializzazione corretta Jupiter Terminal con Referral
     window.addEventListener('load', () => {
         if (window.Jupiter) {
             window.Jupiter.init({
@@ -80,14 +87,12 @@
                 integratedTargetId: "integrated-terminal",
                 endpoint: "https://api.mainnet-beta.solana.com",
                 strictTokenList: false,
-                defaultExplorer: "Solscan",
                 formProps: {
-                    fixedInputMint: false,
                     initialInputMint: "So11111111111111111111111111111111111111112", // SOL
                     initialOutputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
                 },
                 referralAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa",
-                platformFeeBps: 20, // 0.2% commissione
+                platformFeeBps: 20, // Commissione 0.2%
             });
         }
     });
