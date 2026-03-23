@@ -29,8 +29,8 @@
 
     <main class="w-full max-w-md space-y-6">
         
-        <div id="jupiter-terminal-button" class="w-full">
-            <button class="w-full py-6 neon-border rounded-2xl bg-black text-[#10f195] font-black font-vision uppercase tracking-widest hover:bg-[#10f195] hover:text-black transition-all shadow-[0_0_20px_rgba(16,241,149,0.2)]">
+        <div class="w-full">
+            <button id="launch-jupiter" class="w-full py-6 neon-border rounded-2xl bg-black text-[#10f195] font-black font-vision uppercase tracking-widest hover:bg-[#10f195] hover:text-black transition-all shadow-[0_0_20px_rgba(16,241,149,0.2)]">
                 Launch Jupiter Swap
             </button>
         </div>
@@ -68,11 +68,11 @@
     const SUPABASE_KEY = 'sb_publishable_McakxoSphNnS09S5kcWhIg_iGo705zF';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Inizializzazione Jupiter in modalità Widget (Modal) per evitare i tagli grafici
-    window.addEventListener('load', () => {
+    // Funzione per inizializzare Jupiter su comando
+    function initJupiter() {
         if (window.Jupiter) {
             window.Jupiter.init({
-                displayMode: "modal", // FIX: Questa modalità apre un popup che non viene mai tagliato
+                displayMode: "modal",
                 endpoint: "https://api.mainnet-beta.solana.com",
                 referralAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa",
                 platformFeeBps: 20,
@@ -82,14 +82,24 @@
                 }
             });
         }
-    });
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
+        const launchBtn = document.getElementById('launch-jupiter');
         const verifyBtn = document.getElementById('verify-btn');
         const calcBtn = document.getElementById('calc-btn');
         const msgInput = document.getElementById('user-msg');
         const persistentList = document.getElementById('persistent-echo-list');
         const overlay = document.getElementById('lock-overlay');
+
+        // Gestione apertura Jupiter
+        launchBtn.addEventListener('click', () => {
+            if (window.Jupiter._instance) {
+                window.Jupiter.resume(); // Se esiste già, lo riapre
+            } else {
+                initJupiter(); // Altrimenti lo crea
+            }
+        });
 
         const loadGlobalEcho = async () => {
             const { data, error } = await _supabase
@@ -106,8 +116,8 @@
 
         verifyBtn.addEventListener('click', async () => {
             const signal = msgInput.value.trim() || "Signal Synchronized";
-            const { error } = await _supabase.from('messages').insert([{ content: signal }]);
-            if (!error) await loadGlobalEcho();
+            await _supabase.from('messages').insert([{ content: signal }]);
+            await loadGlobalEcho();
             overlay.style.opacity = "0";
             overlay.style.pointerEvents = "none";
             setTimeout(() => { overlay.style.display = 'none'; }, 600);
