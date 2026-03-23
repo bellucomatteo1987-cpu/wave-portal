@@ -6,7 +6,7 @@
     <title>WAVE | Neural Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://terminal.jup.ag/main-v3.js"></script>
+    <script src="https://terminal.jup.ag/main-v3.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000000; color: #ffffff; margin: 0; font-family: 'Space Grotesk', sans-serif; }
@@ -18,55 +18,60 @@
 
     <header class="mb-12 text-center">
         <h1 class="text-6xl font-black italic neon-text uppercase tracking-tighter">WAVE</h1>
-        <p class="text-[10px] tracking-[0.4em] opacity-40 uppercase">Helius Core Path - v3.5.3</p>
+        <p class="text-[10px] tracking-[0.4em] opacity-40 uppercase">Direct Neural Path</p>
     </header>
 
-    <main class="w-full max-w-md">
-        <div id="integrated-terminal" class="w-full h-[500px] neon-border rounded-2xl overflow-hidden bg-[#13141b]">
-            </div>
+    <main class="w-full max-w-md space-y-6">
+        <button id="launch-jupiter" class="w-full py-6 neon-border rounded-2xl bg-black text-[#14f195] font-black uppercase tracking-widest hover:bg-[#14f195] hover:text-black transition-all">
+            Lancia Terminale
+        </button>
 
-        <div class="mt-6 bg-[#0a0a0a] border border-white/5 p-4 rounded-xl">
-            <p id="status-log" class="text-[9px] font-mono text-emerald-500/50 italic text-center uppercase tracking-widest">System Ready</p>
+        <div class="bg-[#0a0a0a] border border-white/5 p-6 rounded-2xl relative shadow-2xl">
+            <div id="lock-overlay" class="absolute inset-0 bg-black/95 z-10 flex flex-col items-center justify-center p-6 rounded-2xl">
+                <input type="text" id="user-msg" placeholder="Inserisci segnale..." class="w-full p-3 rounded bg-white/5 border border-white/10 text-white text-xs mb-3 outline-none">
+                <button id="verify-btn" class="w-full py-3 bg-[#14f195] text-black font-black text-[10px] uppercase rounded">Sblocca</button>
+            </div>
+            <div id="msg-feed" class="text-[9px] font-mono opacity-30 h-10 italic"></div>
         </div>
     </main>
 
 <script>
-    // Configurazione Supabase (per il feed messaggi se ti serve ancora)
     const SUPABASE_URL = 'https://ojfplozwfidjwqwpwcdt.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_McakxoSphNnS09S5kcWhIg_iGo705zF';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    window.onload = () => {
+    function initJupiter() {
         if (window.Jupiter) {
-            console.log("WAVE: Forzatura caricamento Terminale...");
-            document.getElementById('status-log').innerText = "Inizializzazione Neural Link...";
-            
+            // USIAMO SOLO L'RPC DI HELIUS E LASCIAMO CHE JUPITER GESTISCA IL RESTO
             window.Jupiter.init({
-                // CAMBIAMENTO: Lo integriamo fisso nella pagina invece che come popup
-                displayMode: "integrated",
-                integratedTargetId: "integrated-terminal",
+                displayMode: "modal",
                 endpoint: "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43",
-                
-                // DISABILITIAMO TUTTO CIÒ CHE CAUSA ERRORI NELLA CONSOLE
                 strictTokenList: false,
-                useUserSlippage: true,
-                
-                // Referral configurato
                 referralAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa",
                 platformFeeBps: 20,
-                
                 formProps: {
-                    fixedOutputMint: false,
                     initialInputMint: "So11111111111111111111111111111111111111112",
                     initialOutputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
                 }
             });
-            
-            document.getElementById('status-log').innerText = "Neural Link Active";
-        } else {
-            document.getElementById('status-log').innerText = "ERRORE: Script Jupiter non caricato";
+            console.log("Jupiter inizializzato correttamente");
         }
-    };
+    }
+
+    document.getElementById('launch-jupiter').addEventListener('click', () => {
+        // Se Jupiter è già attivo lo riprendiamo, altrimenti lo inizializziamo
+        if (window.Jupiter && window.Jupiter._instance) {
+            window.Jupiter.resume();
+        } else {
+            initJupiter();
+        }
+    });
+
+    document.getElementById('verify-btn').addEventListener('click', async () => {
+        const val = document.getElementById('user-msg').value;
+        await _supabase.from('messages').insert([{ content: val || "WAVE Access" }]);
+        document.getElementById('lock-overlay').style.display = 'none';
+    });
 </script>
 </body>
 </html>
