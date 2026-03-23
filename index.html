@@ -6,14 +6,15 @@
     <title>WAVE | Neural Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://terminal.jup.ag/main-v3.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000000; color: #ffffff; margin: 0; overflow-x: hidden; font-family: sans-serif; }
         .neon-border { border: 1px solid rgba(20, 241, 149, 0.4); box-shadow: 0 0 25px rgba(20, 241, 149, 0.1); }
         .neon-text { text-shadow: 0 0 10px rgba(20, 241, 149, 0.8); color: rgba(20, 241, 149, 1); }
         .font-vision { font-family: 'Space Grotesk', sans-serif; }
-        .terminal-container { width: 100%; height: 600px; background: #000; overflow: hidden; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; color-scheme: dark; }
+        /* Altezza adattata per il terminale Jupiter */
+        .terminal-container { width: 100%; min-height: 550px; background: #000; position: relative; }
         #persistent-echo-list::-webkit-scrollbar { width: 4px; }
         #persistent-echo-list::-webkit-scrollbar-thumb { background: rgba(20, 241, 149, 0.3); border-radius: 10px; }
     </style>
@@ -26,37 +27,24 @@
         </div>
         <h1 class="text-6xl font-black font-vision tracking-tighter uppercase italic neon-text">WAVE INTERFACE</h1>
         <p class="text-[10px] tracking-[0.3em] text-white/40 mt-2 uppercase italic">Solana Neural Monitoring v3.5</p>
-        
-        <div class="mt-6 max-w-xs mx-auto space-y-2">
-            <p class="text-[11px] text-emerald-400/80 font-vision leading-relaxed uppercase tracking-wider italic">
-                Bridging the neural gap in the Solana ecosystem. Real-time monitoring and AI-architected insights for the modern network.
-            </p>
-            <p class="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em]">
-                Stay on these frequencies.
-            </p>
-        </div>
     </header>
 
     <main class="w-full max-w-md space-y-6">
-        <div class="neon-border rounded-3xl overflow-hidden bg-black p-1">
-            <div class="terminal-container">
-                <iframe src="https://raydium.io/swap/?inputMint=sol&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" title="Raydium Swap"></iframe>
-            </div>
+        <div class="neon-border rounded-3xl overflow-hidden bg-black p-4">
+            <div id="integrated-terminal" class="terminal-container"></div>
         </div>
 
         <div class="bg-black border border-emerald-500/20 p-6 rounded-2xl relative overflow-hidden shadow-2xl">
             <div id="lock-overlay" class="absolute inset-0 bg-black/95 backdrop-blur-md z-10 flex flex-col items-center justify-center p-6 text-center">
                 <h2 class="text-emerald-400 font-vision font-bold uppercase tracking-widest mb-1 text-sm italic">THE WAVE ECHO</h2>
-                <p class="text-[9px] text-white/50 uppercase mb-4 italic leading-tight">Broadcast your signal to the network<br>and access hyper-neural features</p>
                 <input type="text" id="user-msg" placeholder="Write a degen phrase..." maxlength="50" class="w-full p-3 rounded-lg mb-3 text-xs outline-none border border-white/10 bg-white/5 text-white focus:border-emerald-400">
                 <button id="verify-btn" class="w-full py-3 bg-[#10f195] text-black font-black rounded-lg text-[10px] uppercase tracking-widest hover:bg-white transition-all shadow-[0_0_15px_rgba(16,241,149,0.3)]">SEND & ACCESS</button>
             </div>
 
             <div class="space-y-6">
-                <div class="border-b border-white/5 pb-4">
+                <div>
                     <p class="text-[8px] text-emerald-400/60 uppercase font-bold mb-3 tracking-widest italic">NEURAL PULSE FEED:</p>
-                    <ul id="persistent-echo-list" class="text-[10px] font-mono text-white/40 space-y-2 overflow-y-auto max-h-[80px] pr-2 list-none">
-                    </ul>
+                    <ul id="persistent-echo-list" class="text-[10px] font-mono text-white/40 space-y-2 overflow-y-auto max-h-[80px] pr-2 list-none"></ul>
                 </div>
 
                 <div class="space-y-4">
@@ -75,18 +63,6 @@
                         <p id="result-text" class="text-[11px] font-vision leading-tight text-white/90 italic"></p>
                     </div>
                 </div>
-
-                <div class="mt-8 pt-6 border-t border-white/10 space-y-4">
-                    <h4 class="text-[9px] font-black font-vision text-emerald-400 uppercase tracking-[0.2em] italic">Operational Manual v1.1</h4>
-                    <div class="space-y-3 text-[8px] uppercase tracking-widest leading-relaxed">
-                        <div class="space-y-1">
-                            <p class="text-white/80 font-bold underline italic">1. Risk Terminal Logic:</p>
-                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Total SOL:</span> Ammunition for operations.</p>
-                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Risk %:</span> Capital protection parameter.</p>
-                            <p class="text-white/40 italic"><span class="text-emerald-400/60">Multipliers:</span> Calculated based on asset volatility.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
@@ -95,6 +71,26 @@
     const SUPABASE_URL = 'https://ojfplozwfidjwqwpwcdt.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_McakxoSphNnS09S5kcWhIg_iGo705zF';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Inizializzazione Jupiter Terminal
+    window.addEventListener('load', () => {
+        if (window.Jupiter) {
+            window.Jupiter.init({
+                displayMode: "integrated",
+                integratedTargetId: "integrated-terminal",
+                endpoint: "https://api.mainnet-beta.solana.com",
+                strictTokenList: false,
+                defaultExplorer: "Solscan",
+                formProps: {
+                    fixedInputMint: false,
+                    initialInputMint: "So11111111111111111111111111111111111111112", // SOL
+                    initialOutputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
+                },
+                referralAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa",
+                platformFeeBps: 20, // 0.2% commissione
+            });
+        }
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
         const verifyBtn = document.getElementById('verify-btn');
@@ -110,26 +106,17 @@
                 .order('created_at', { ascending: false })
                 .limit(10);
             if (!error && data) {
-                persistentList.innerHTML = data.map(m => `<li class="border-l border-emerald-500/30 pl-2 py-0.5 italic truncate opacity-80 hover:opacity-100 transition-opacity">${m.content}</li>`).join('');
+                persistentList.innerHTML = data.map(m => `<li class="border-l border-emerald-500/30 pl-2 py-0.5 italic truncate opacity-80">${m.content}</li>`).join('');
             }
         };
 
         loadGlobalEcho();
 
-        _supabase.channel('public:messages').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => {
-            loadGlobalEcho();
-        }).subscribe();
-
         verifyBtn.addEventListener('click', async () => {
             const signal = msgInput.value.trim() || "Signal Synchronized";
             verifyBtn.innerText = "BROADCASTING...";
-            verifyBtn.disabled = true;
-
             const { error } = await _supabase.from('messages').insert([{ content: signal }]);
-
-            if (!error) {
-                await loadGlobalEcho();
-            }
+            if (!error) await loadGlobalEcho();
 
             setTimeout(() => {
                 overlay.style.transition = "all 0.6s ease-in-out";
@@ -139,28 +126,18 @@
             }, 400); 
         });
 
-        if (calcBtn) {
-            calcBtn.addEventListener('click', () => {
-                const cap = parseFloat(document.getElementById('total-cap').value);
-                const rsk = parseFloat(document.getElementById('risk-perc').value);
-                const vol = parseFloat(document.getElementById('asset-type').value);
-                if (isNaN(cap) || isNaN(rsk)) return;
-                
-                let size = (cap * (rsk / 100)) / vol;
-                let isMax = false;
-                if (size > cap) {
-                    size = cap;
-                    isMax = true;
-                }
+        calcBtn.addEventListener('click', () => {
+            const cap = parseFloat(document.getElementById('total-cap').value);
+            const rsk = parseFloat(document.getElementById('risk-perc').value);
+            const vol = parseFloat(document.getElementById('asset-type').value);
+            if (isNaN(cap) || isNaN(rsk)) return;
+            
+            let size = (cap * (rsk / 100)) / vol;
+            if (size > cap) size = cap;
 
-                document.getElementById('result-box').classList.remove('hidden');
-                document.getElementById('result-text').innerHTML = `
-                    RECOMMENDED SIZE: ${size.toFixed(3)} SOL<br>
-                    <span class="text-[8px] text-white/30 uppercase mt-2 block italic">
-                        ${isMax ? '⚠️ MAX ALL-IN ALLOCATION' : 'Neural Logic ON'}
-                    </span>`;
-            });
-        }
+            document.getElementById('result-box').classList.remove('hidden');
+            document.getElementById('result-text').innerHTML = `RECOMMENDED SIZE: ${size.toFixed(3)} SOL`;
+        });
     });
 </script>
 </body>
