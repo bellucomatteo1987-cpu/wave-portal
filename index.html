@@ -50,32 +50,27 @@
     </main>
 
     <script>
-        // Funzione per inizializzare il terminale appena lo script è caricato
-        function initJupiter() {
-            if (window.Jupiter) {
-                window.Jupiter.init({
-                    displayMode: "integrated",
-                    integratedTargetId: "integrated-terminal",
-                    endpoint: "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43",
-                    formProps: {
-                        initialOutputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
-                        platformFeeBps: 100, // FORZATURA 1%
-                    },
-                    referrerAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa"
-                });
-            } else {
-                setTimeout(initJupiter, 500);
-            }
+    function launchJupiter() {
+        if (window.Jupiter && typeof window.Jupiter.init === 'function') {
+            console.log("WAVE: Inizializzazione Terminale...");
+            window.Jupiter.init({
+                displayMode: "integrated",
+                integratedTargetId: "integrated-terminal",
+                endpoint: "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43",
+                formProps: {
+                    platformFeeBps: 100,
+                },
+                referrerAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa"
+            });
+        } else {
+            console.log("WAVE: Attesa libreria Jupiter...");
+            setTimeout(launchJupiter, 1000); // Riprova ogni secondo
         }
+    }
 
-        window.addEventListener('load', initJupiter);
-
-        // Calcolo Rischio
-        const capInput = document.getElementById('capitale');
-        const resDiv = document.getElementById('risultato');
-        capInput.addEventListener('input', () => {
-            resDiv.innerText = `${(parseFloat(capInput.value || 0) * 0.02).toFixed(3)} SOL`;
-        });
-    </script>
+    // Prova a lanciare subito e anche al caricamento completo
+    launchJupiter();
+    window.addEventListener('load', launchJupiter);
+</script>
 </body>
 </html>
