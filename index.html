@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WAVE | Neural Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://terminal.jup.ag/main-v6.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; overflow-x: hidden; }
         .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.3); box-shadow: 0 0 40px rgba(52, 211, 153, 0.15); }
-        .iframe-container { width: 100%; height: 600px; border: none; background: #000; }
+        #integrated-terminal { width: 100%; min-height: 570px; }
         .risk-terminal { background: rgba(16, 24, 20, 0.9); border: 1px dashed #10b981; padding: 20px; border-radius: 1rem; width: 100%; max-width: 440px; margin-bottom: 20px; }
         .risk-input, .risk-select { background: #000; border: 1px solid #10b981; color: #10b981; padding: 4px 8px; border-radius: 4px; outline: none; font-family: monospace; }
-        .risk-input { width: 80px; }
-        .risk-select { width: 140px; font-size: 10px; cursor: pointer; }
     </style>
 </head>
 <body class="bg-black text-white">
@@ -24,86 +23,56 @@
         
         <div class="risk-terminal text-emerald-400 font-mono text-xs">
             <div class="flex justify-between mb-4 border-b border-emerald-900 pb-2">
-                <span class="font-bold tracking-tighter uppercase">[ Risk Terminal v.1.1 ]</span>
+                <span class="font-bold tracking-tighter uppercase">[ Risk Terminal v.1.2 ]</span>
                 <span class="animate-pulse">● Protocollo Attivo</span>
             </div>
             <div class="space-y-3">
                 <div class="flex justify-between items-center">
-                    <span>TOTAL CAP (SOL):</span>
-                    <input type="number" id="capitale" class="risk-input text-right" value="10" step="1">
-                </div>
-                <div class="flex justify-between items-center">
-                    <span>RISK LEVEL:</span>
-                    <select id="riskProfile" class="risk-select">
-                        <option value="1">BLUE (1% Safe)</option>
-                        <option value="2" selected>EMERALD (2% Std)</option>
-                        <option value="5">DEGEN (5% High)</option>
-                        <option value="custom">CUSTOM (%)</option>
-                    </select>
-                </div>
-                <div id="customRiskContainer" class="flex justify-between items-center hidden">
-                    <span>CUSTOM RISK (%):</span>
-                    <input type="number" id="rischio" class="risk-input text-right" value="2" max="100">
+                    <span>CAPITALE TOTALE (SOL):</span>
+                    <input type="number" id="capitale" class="risk-input text-right" value="10">
                 </div>
                 <div class="mt-4 pt-3 border-t border-emerald-900 flex justify-between items-center text-sm font-bold bg-emerald-950/30 p-2 rounded">
-                    <span>SECURE:</span>
+                    <span>ESPOSIZIONE SICURA:</span>
                     <span id="risultato" class="text-white">0.200 SOL</span>
                 </div>
             </div>
-            <div class="mt-2 text-[8px] text-emerald-700 text-center tracking-widest italic uppercase">
-                * WAVE *
-            </div>
         </div>
 
-        
-     <div class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow bg-[#0b0e11] mb-8">
-    <iframe 
-        src="https://jup.ag/swap/SOL-USDC?feeBps=100&referrer=BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa&dynamic=true" 
-        class="iframe-container"
-        title="WAVE Terminal"
-        allow="clipboard-read; clipboard-write"
-    ></iframe>
-</div>
-      
+        <div class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow bg-[#0b0e11] mb-8">
+            <div id="integrated-terminal"></div>
+        </div>
 
         <a href="https://dub.sh/WAVEPortal" target="_blank" class="group flex flex-col items-center transition-all hover:scale-105">
             <div class="px-8 py-3 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 font-bold tracking-widest text-sm hover:bg-emerald-500/20 transition-all uppercase">
-                Enter
-            </div>
-            <div class="mt-2 text-emerald-500/40 text-[10px] uppercase tracking-widest italic">
-                Geopolitical Monitoring h24
+                Entra nel WAVE Whales Portal
             </div>
         </a>
     </main>
 
     <script>
-        const capInput = document.getElementById('capitale');
-        const riskInput = document.getElementById('rischio');
-        const riskSelect = document.getElementById('riskProfile');
-        const customContainer = document.getElementById('customRiskContainer');
-        const resDiv = document.getElementById('risultato');
-
-        function calcolaRischio() {
-            const capitale = parseFloat(capInput.value) || 0;
-            let rischioPercent;
-            
-            if (riskSelect.value === 'custom') {
-                customContainer.classList.remove('hidden');
-                rischioPercent = parseFloat(riskInput.value) || 0;
-            } else {
-                customContainer.classList.add('hidden');
-                rischioPercent = parseFloat(riskSelect.value);
-                riskInput.value = rischioPercent;
+        // Inizializzazione Terminale con forzatura Fee
+        window.addEventListener('load', () => {
+            if (window.Jupiter) {
+                window.Jupiter.init({
+                    displayMode: "integrated",
+                    integratedTargetId: "integrated-terminal",
+                    endpoint: "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43",
+                    strictTokenList: false,
+                    formProps: {
+                        fixedOutputMint: false,
+                        platformFeeBps: 100, // FORZATURA 1%
+                    },
+                    referrerAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa"
+                });
             }
+        });
 
-            const esposizione = (capitale * (rischioPercent / 100)).toFixed(3);
-            resDiv.innerText = `${esposizione} SOL`;
-        }
-
-        capInput.addEventListener('input', calcolaRischio);
-        riskInput.addEventListener('input', calcolaRischio);
-        riskSelect.addEventListener('change', calcolaRischio);
-        calcolaRischio();
+        // Logica calcolo rischio (semplificata)
+        const capInput = document.getElementById('capitale');
+        const resDiv = document.getElementById('risultato');
+        capInput.addEventListener('input', () => {
+            resDiv.innerText = `${(parseFloat(capInput.value || 0) * 0.02).toFixed(3)} SOL`;
+        });
     </script>
 </body>
 </html>
