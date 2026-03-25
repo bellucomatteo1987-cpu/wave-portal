@@ -26,13 +26,14 @@
             text-align: center; text-transform: uppercase; font-style: italic;
             letter-spacing: 0.1em; transition: all 0.3s;
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            display: block;
         }
         .neural-button:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
     </style>
 </head>
-<body class="flex flex-col items-center p-6 min-h-screen justify-center">
+<body class="flex flex-col items-center p-6 min-h-screen">
 
-    <header class="text-center mb-10">
+    <header class="text-center mt-10 mb-10">
         <h1 class="text-6xl font-black italic text-emerald-400 tracking-tighter uppercase leading-none">Wave</h1>
         <p class="text-emerald-500/50 font-light tracking-[0.4em] uppercase text-[9px] italic mt-2">Neural Intelligence Interface</p>
     </header>
@@ -62,20 +63,77 @@
         </div>
     </div>
 
-    <a id="jupiter-link" href="#" target="_blank" class="neural-button mb-10">
-        Terminal Swap →
-    </a>
+    <div class="w-full max-w-[420px] space-y-6 mb-12">
+        <a id="jupiter-link" href="#" target="_blank" class="neural-button">
+            Terminal Swap →
+        </a>
 
-    <a href="https://dub.sh/WAVEPortal" target="_blank" class="text-emerald-500/40 text-[10px] uppercase tracking-[0.4em] italic hover:text-emerald-400 transition-colors">
-        [ Access WAVE Portal ]
-    </a>
+        <a href="https://dub.sh/WAVEPortal" target="_blank" class="block w-full py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 font-bold text-center text-xs uppercase italic tracking-widest hover:bg-emerald-500/20 transition-all">
+            [ Access WAVE Portal ]
+        </a>
+    </div>
+
+    <div class="w-full max-w-[420px] font-mono mb-20">
+        <div class="flex items-center gap-4 mb-8">
+            <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-emerald-900 to-emerald-500"></div>
+            <span class="text-[10px] text-emerald-500 tracking-[0.5em] uppercase font-bold italic">Manifesto</span>
+            <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent via-emerald-900 to-emerald-500"></div>
+        </div>
+
+        <ul class="space-y-6">
+            <li class="flex items-start gap-4 group">
+                <span class="text-emerald-500 font-black text-xs mt-1 group-hover:animate-pulse">01</span>
+                <div>
+                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Neural Command Center</span>
+                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Professional-grade trading interface engineered for millisecond precision on the Solana network[cite: 1, 3].</p>
+                </div>
+            </li>
+
+            <li class="flex items-start gap-4 group">
+                <span class="text-emerald-400 font-black text-xs mt-1 group-hover:animate-pulse">02</span>
+                <div>
+                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">60s Execution Engine</span>
+                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Real-time monitoring of Whales, Geopolitics, and Social Trends for sub-minute action[cite: 3, 4].</p>
+                </div>
+            </li>
+
+            <li class="flex items-start gap-4 group">
+                <span class="text-emerald-300 font-black text-xs mt-1 group-hover:animate-pulse">03</span>
+                <div>
+                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Prudent Risk Protocol</span>
+                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Advanced capital management tools designed to scale small portfolios with total credibility[cite: 10, 15].</p>
+                </div>
+            </li>
+
+            <li class="flex items-start gap-4 group">
+                <span class="text-emerald-200 font-black text-xs mt-1 group-hover:animate-pulse">04</span>
+                <div>
+                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Diamond Hands Community</span>
+                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">24/7 market surveillance and high-conviction signals for an exclusive degen elite[cite: 12, 14, 15].</p>
+                </div>
+            </li>
+
+            <li class="flex items-start gap-4 group">
+                <span class="text-white font-black text-xs mt-1 group-hover:animate-pulse">05</span>
+                <div>
+                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Sustainable Growth</span>
+                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Automated micro-fee architecture securing infrastructure scalability and project future[cite: 16, 17, 18].</p>
+                </div>
+            </li>
+        </ul>
+
+        <div class="mt-12 flex justify-center">
+            <div class="px-4 py-1 border border-emerald-500/20 rounded-full">
+                <span class="text-[8px] text-emerald-500/40 tracking-[0.3em] uppercase italic font-light">Neural Intelligence Active // waveproject.site</span>
+            </div>
+        </div>
+    </div>
 
     <script>
         const REF_ACCOUNT = "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa";
         let currentRisk = 2;
 
         function updateJupiterLink() {
-            // Generiamo l'URL seguendo la doc: feeBps=100 (1%) e il tuo wallet come referrer
             const baseUrl = "https://jup.ag/swap/SOL-USDC";
             const params = `?feeBps=100&referrer=${REF_ACCOUNT}`;
             document.getElementById('jupiter-link').href = baseUrl + params;
