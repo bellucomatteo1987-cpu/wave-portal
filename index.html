@@ -7,106 +7,99 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; color: white; overflow-x: hidden; }
-        .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.3); box-shadow: 0 0 40px rgba(52, 211, 153, 0.15); }
-        
-        /* Container Iframe Garantito */
-        .terminal-container {
-            width: 100%;
-            max-width: 440px;
-            height: 600px;
-            background: #0b0e11;
-            border-radius: 1.5rem;
-            overflow: hidden;
-            position: relative;
-        }
-
-        iframe { width: 100%; height: 100%; border: none; }
-
+        body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; color: white; }
+        .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.4); box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); }
         .risk-terminal { 
-            background: linear-gradient(145deg, rgba(16, 24, 20, 0.95), rgba(6, 10, 8, 0.98)); 
-            border: 1px solid #10b981; padding: 20px; border-radius: 1.5rem; 
-            width: 100%; max-width: 440px; margin-bottom: 24px;
+            background: linear-gradient(145deg, rgba(6, 10, 8, 0.98), rgba(16, 24, 20, 0.95)); 
+            border: 1px solid #10b981; padding: 24px; border-radius: 1.5rem; 
+            width: 100%; max-width: 420px;
         }
-
         .strategy-btn {
-            border: 1px solid #064e3b; padding: 8px; border-radius: 8px; 
-            font-size: 10px; cursor: pointer; background: transparent; color: #10b981;
-            font-weight: bold; flex: 1; text-align: center; transition: 0.2s;
+            border: 1px solid #064e3b; padding: 10px; border-radius: 8px; 
+            font-size: 11px; cursor: pointer; background: transparent; color: #10b981;
+            font-weight: bold; flex: 1; text-align: center; transition: 0.3s;
         }
         .strategy-btn.active { background: #10b981; color: #000; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        .neural-button {
+            background: #10b981; color: #000; font-weight: 900;
+            padding: 18px; border-radius: 1rem; width: 100%; max-width: 420px;
+            text-align: center; text-transform: uppercase; font-style: italic;
+            letter-spacing: 0.1em; transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+        .neural-button:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
     </style>
 </head>
-<body class="flex flex-col items-center py-8 px-4">
+<body class="flex flex-col items-center p-6 min-h-screen justify-center">
 
-    <header class="text-center mb-8">
+    <header class="text-center mb-10">
         <h1 class="text-6xl font-black italic text-emerald-400 tracking-tighter uppercase leading-none">Wave</h1>
         <p class="text-emerald-500/50 font-light tracking-[0.4em] uppercase text-[9px] italic mt-2">Neural Intelligence Interface</p>
     </header>
 
-    <div class="risk-terminal text-emerald-400 font-mono text-xs shadow-2xl">
-        <div class="flex justify-between mb-4 border-b border-emerald-900 pb-2 italic text-[9px]">
-            <span>[ NEURAL RISK ENGINE ]</span>
-            <span class="animate-pulse text-emerald-500">● SYSTEM READY</span>
+    <div class="risk-terminal text-emerald-400 font-mono text-xs mb-8">
+        <div class="flex justify-between mb-6 border-b border-emerald-900 pb-2 italic text-[9px]">
+            <span>[ NEURAL RISK ENGINE v2.5 ]</span>
+            <span class="animate-pulse">● READY</span>
         </div>
-        
-        <div class="space-y-4">
+        <div class="space-y-6">
             <div class="flex justify-between items-center">
-                <span class="opacity-80 uppercase text-[9px]">Capitale (SOL):</span>
-                <input type="number" id="capitale" class="bg-black border border-emerald-900 text-emerald-400 p-2 rounded w-24 text-right font-bold outline-none" value="10">
+                <span class="uppercase opacity-70 tracking-widest">Balance (SOL):</span>
+                <input type="number" id="capitale" class="bg-black border border-emerald-900 text-emerald-400 p-2 rounded w-28 text-right font-bold text-lg outline-none" value="10">
             </div>
-
             <div class="flex gap-2">
                 <button onclick="setStrategy('blue', 1)" id="btn-blue" class="strategy-btn">Blue</button>
                 <button onclick="setStrategy('solid', 2)" id="btn-solid" class="strategy-btn active">Solid</button>
                 <button onclick="setStrategy('degen', 5)" id="btn-degen" class="strategy-btn">Degen</button>
             </div>
-
-            <div class="mt-4 pt-4 border-t border-emerald-900 bg-emerald-950/20 p-4 rounded-xl border border-emerald-800/30 flex justify-between items-center">
-                <span class="text-white text-sm font-black italic uppercase leading-none">Safe Alloc:</span>
-                <span id="risultato" class="text-emerald-400 text-xl font-black tracking-tighter underline leading-none text-right">0.200 SOL</span>
+            <div class="pt-6 border-t border-emerald-900 flex justify-between items-center">
+                <div class="flex flex-col">
+                    <span class="text-white font-black italic uppercase text-sm leading-none">Safe Allocation:</span>
+                    <span class="text-[9px] opacity-40 uppercase mt-1">Prudent Protocol Applied</span>
+                </div>
+                <span id="risultato" class="text-emerald-400 text-3xl font-black tracking-tighter underline leading-none">0.200 SOL</span>
             </div>
         </div>
     </div>
 
-    <div class="terminal-container emerald-glow mb-8">
-        <iframe 
-            src="https://jup.ag/swap/SOL-USDC?feeBps=100&referrer=BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa" 
-            title="Jupiter Swap">
-        </iframe>
-    </div>
+    <a id="jupiter-link" href="#" target="_blank" class="neural-button mb-10">
+        Terminal Swap →
+    </a>
 
-    <div class="flex flex-col gap-6 items-center w-full">
-        <a href="https://dub.sh/WAVEPortal" target="_blank" class="w-full max-w-[320px]">
-            <div class="py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 font-bold tracking-[0.2em] text-xs text-center uppercase italic transition-all hover:bg-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
-                Join WAVE Portal
-            </div>
-        </a>
-        <div class="text-emerald-500/30 text-[8px] uppercase tracking-[0.4em] italic font-light">
-            Powered by Jupiter V2 Neural Routing
-        </div>
-    </div>
+    <a href="https://dub.sh/WAVEPortal" target="_blank" class="text-emerald-500/40 text-[10px] uppercase tracking-[0.4em] italic hover:text-emerald-400 transition-colors">
+        [ Access WAVE Portal ]
+    </a>
 
     <script>
-        // Logica Rischio
-        const capInput = document.getElementById('capitale');
-        const resDiv = document.getElementById('risultato');
+        const REF_ACCOUNT = "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa";
         let currentRisk = 2;
 
-        function calculateRisk() {
-            const cap = parseFloat(capInput.value) || 0;
-            resDiv.innerText = `${(cap * (currentRisk / 100)).toFixed(3)} SOL`;
+        function updateJupiterLink() {
+            // Generiamo l'URL seguendo la doc: feeBps=100 (1%) e il tuo wallet come referrer
+            const baseUrl = "https://jup.ag/swap/SOL-USDC";
+            const params = `?feeBps=100&referrer=${REF_ACCOUNT}`;
+            document.getElementById('jupiter-link').href = baseUrl + params;
+        }
+
+        function calculate() {
+            const cap = parseFloat(document.getElementById('capitale').value) || 0;
+            const res = (cap * (currentRisk / 100)).toFixed(3);
+            document.getElementById('risultato').innerText = `${res} SOL`;
+            updateJupiterLink();
         }
 
         function setStrategy(name, percent) {
             currentRisk = percent;
-            document.querySelectorAll('.strategy-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-${name}`).classList.add('active');
-            calculateRisk();
+            document.querySelectorAll('.strategy-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-'+name).classList.add('active');
+            calculate();
         }
 
-        capInput.addEventListener('input', calculateRisk);
-        calculateRisk();
+        document.getElementById('capitale').addEventListener('input', calculate);
+        
+        // Init
+        updateJupiterLink();
+        calculate();
     </script>
 </body>
 </html>
