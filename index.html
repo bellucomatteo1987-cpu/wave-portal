@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAVE | Neural Interface v2</title>
+    <title>WAVE | Neural Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <script src="https://terminal.jup.ag/main-v6.js"></script>
     <style>
-        body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; }
+        body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; overflow-x: hidden; }
         .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.3); box-shadow: 0 0 40px rgba(52, 211, 153, 0.15); }
-        #integrated-terminal { width: 100%; min-height: 570px; background: #0b0e11; border-radius: 1.5rem; }
         
+        /* FIX MOBILE: Terminale Jupiter */
+        #integrated-terminal { 
+            width: 100%; 
+            min-height: 570px; /* Altezza minima necessaria per caricare la UI di Jupiter */
+            height: auto;
+            background: #0b0e11; 
+        }
+
         .risk-terminal { 
             background: linear-gradient(145deg, rgba(16, 24, 20, 0.95), rgba(6, 10, 8, 0.98)); 
-            border: 1px solid #10b981; padding: 24px; border-radius: 1.5rem; 
+            border: 1px solid #10b981; padding: 20px; border-radius: 1.5rem; 
             width: 100%; max-width: 440px; margin-bottom: 24px;
         }
 
@@ -25,31 +32,32 @@
         }
         .strategy-btn.active { background: #10b981; color: #000; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
 
-        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); overflow-y: auto; }
-        .modal-content { background: #0b0e11; margin: 40px auto; padding: 30px; border: 1px solid #10b981; width: 90%; max-width: 700px; border-radius: 1.5rem; color: #fff; }
+        /* Modal Fix */
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(10px); overflow-y: auto; }
+        .modal-content { background: #0b0e11; margin: 20px auto; padding: 25px; border: 1px solid #10b981; width: 90%; max-width: 600px; border-radius: 1.5rem; color: #fff; }
     </style>
 </head>
 <body class="bg-black text-white">
 
-    <main class="flex flex-col items-center justify-center min-h-screen py-10 px-4">
-        <h1 class="text-6xl font-black italic text-emerald-400 mb-2 tracking-tighter uppercase leading-none">Wave</h1>
-        <p class="text-emerald-500/50 mb-8 font-light tracking-[0.4em] uppercase text-[9px] italic text-center">Neural Intelligence Interface / Swap API V2 Enabled</p>
+    <main class="flex flex-col items-center py-8 px-4 w-full">
+        <h1 class="text-5xl md:text-6xl font-black italic text-emerald-400 mb-2 tracking-tighter uppercase leading-none text-center">Wave</h1>
+        <p class="text-emerald-500/50 mb-8 font-light tracking-[0.4em] uppercase text-[8px] italic text-center">Neural Intelligence Interface</p>
 
-        <div class="risk-terminal text-emerald-400 font-mono text-xs shadow-2xl">
+        <div class="risk-terminal text-emerald-400 font-mono text-xs">
             <div class="flex justify-between mb-4 border-b border-emerald-900 pb-2 italic">
-                <span class="font-bold tracking-widest">[ NEURAL RISK ENGINE ]</span>
-                <span id="status-led" class="animate-pulse text-emerald-500">● SYSTEM READY</span>
+                <span class="font-bold tracking-widest text-[9px]">[ NEURAL RISK ENGINE ]</span>
+                <span id="status-led" class="animate-pulse text-emerald-500 text-[9px]">● ONLINE</span>
             </div>
             
-            <div class="space-y-5">
+            <div class="space-y-4">
                 <div class="flex justify-between items-center">
-                    <span class="opacity-80 uppercase text-[10px]">Total Balance (SOL):</span>
-                    <input type="number" id="capitale" class="bg-black border border-emerald-900 text-emerald-400 p-2 rounded w-28 text-right font-bold outline-none" value="10">
+                    <span class="opacity-80 uppercase text-[9px]">Balance (SOL):</span>
+                    <input type="number" id="capitale" class="bg-black border border-emerald-900 text-emerald-400 p-2 rounded w-24 text-right font-bold outline-none" value="10">
                 </div>
 
-                <div class="space-y-3">
-                    <span class="opacity-80 uppercase text-[10px]">Neural Strategy (Auto-Slippage):</span>
-                    <div class="flex gap-2 justify-between">
+                <div class="space-y-2">
+                    <span class="opacity-80 uppercase text-[9px]">Strategy:</span>
+                    <div class="flex gap-2">
                         <button onclick="setStrategy('blue', 1)" id="btn-blue" class="strategy-btn flex-1">Blue</button>
                         <button onclick="setStrategy('solid', 2)" id="btn-solid" class="strategy-btn active flex-1">Solid</button>
                         <button onclick="setStrategy('degen', 5)" id="btn-degen" class="strategy-btn flex-1">Degen</button>
@@ -57,26 +65,23 @@
                 </div>
 
                 <div class="mt-4 pt-4 border-t border-emerald-900 bg-emerald-950/20 p-4 rounded-xl border border-emerald-800/30 flex justify-between items-center">
-                    <div class="flex flex-col">
-                        <span class="text-white text-lg font-black italic tracking-tighter leading-none">SAFE ALLOC:</span>
-                        <span class="text-[8px] text-emerald-500/50 uppercase mt-1">Based on Ultra Routing</span>
-                    </div>
-                    <span id="risultato" class="text-emerald-400 text-2xl font-black tracking-tighter underline">0.200 SOL</span>
+                    <span class="text-white text-sm font-black italic uppercase">Safe Alloc:</span>
+                    <span id="risultato" class="text-emerald-400 text-xl font-black tracking-tighter underline">0.200 SOL</span>
                 </div>
             </div>
         </div>
 
-        <div class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow mb-8 relative">
+        <div class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow mb-8 bg-[#0b0e11]">
             <div id="integrated-terminal"></div>
         </div>
 
-        <div class="flex flex-col gap-5 items-center">
-            <button onclick="openModal()" class="text-emerald-500/60 hover:text-emerald-400 font-mono text-[10px] uppercase tracking-widest border-b border-emerald-900 pb-1 italic transition-all hover:border-emerald-400">
-                [ Explore Protocol Manifest ]
+        <div class="flex flex-col gap-6 items-center w-full">
+            <button onclick="openModal()" class="text-emerald-500/60 font-mono text-[9px] uppercase tracking-[0.2em] border-b border-emerald-900 pb-1 italic">
+                [ Protocol Manifest ]
             </button>
 
-            <a href="https://dub.sh/WAVEPortal" target="_blank" class="group flex flex-col items-center">
-                <div class="px-12 py-4 bg-emerald-500/5 border border-emerald-500/30 rounded-full text-emerald-400 font-bold tracking-[0.2em] text-sm group-hover:bg-emerald-500/20 transition-all uppercase italic shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+            <a href="https://dub.sh/WAVEPortal" target="_blank" class="w-full max-w-[300px]">
+                <div class="py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 font-bold tracking-[0.2em] text-xs text-center uppercase italic group-hover:bg-emerald-500/20 transition-all">
                     Join WAVE Portal
                 </div>
             </a>
@@ -85,48 +90,34 @@
 
     <div id="manifestModal" class="modal" onclick="closeModal()">
         <div class="modal-content emerald-glow font-mono text-sm leading-relaxed" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center border-b border-emerald-900 pb-4 mb-6">
-                <h2 class="text-emerald-400 font-bold uppercase text-xl italic underline tracking-tighter">WAVE Protocol Manifest</h2>
-                <button onclick="closeModal()" class="text-emerald-400 text-3xl leading-none">&times;</button>
+            <div class="flex justify-between items-center border-b border-emerald-900 pb-4 mb-4">
+                <h2 class="text-emerald-400 font-bold uppercase italic text-lg tracking-tighter">Manifesto</h2>
+                <button onclick="closeModal()" class="text-emerald-400 text-3xl">&times;</button>
             </div>
-            <div class="space-y-6 text-emerald-100/90 italic pb-4">
-                <p>WAVE is a digital command center built on the Jupiter Swap V2 API, optimized for high-performance execution on Solana.</p>
-                <section>
-                    <h3 class="text-emerald-500 font-bold uppercase mb-2 border-l-2 border-emerald-500 pl-3">I. Neural Routing</h3>
-                    <p>By leveraging the /order endpoint, WAVE accesses Metis and RFQ market makers, often beating on-chain prices by 5-20bps.</p>
-                </section>
-                <section>
-                    <h3 class="text-emerald-500 font-bold uppercase mb-2 border-l-2 border-emerald-500 pl-3">II. Managed Execution</h3>
-                    <p>All trades utilize Jupiter Beam for accelerated landing and real-time slippage estimation, ensuring "Diamond Hands" precision.</p>
-                </section>
+            <div class="space-y-4 text-emerald-100/80 italic text-xs">
+                <p>WAVE: Neural Interface for Solana. Optimized with Ultra Routing (Metis + RFQ).</p>
+                <p>Managed execution via Jupiter V2 API. 100 bps protocol sustainability fee applied.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURAZIONE REFERRAL (Importante: Inizializza questi account su referral.jup.ag)
         const REFERRAL_ACCOUNT = "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa";
-        const RPC_ENDPOINT = "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43";
 
         function initJupiter() {
             if (window.Jupiter) {
                 window.Jupiter.init({
                     displayMode: "integrated",
                     integratedTargetId: "integrated-terminal",
-                    endpoint: RPC_ENDPOINT,
+                    endpoint: "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43",
                     strictTokenList: false,
                     formProps: {
                         fixedOutputMint: false,
                         swapMode: "ExactIn",
-                        // Utilizziamo le fee del Referral Program (V2)
-                        // Note: Aggiungendo referralAccount, JupiterZ (RFQ) viene disabilitato 
-                        // ma abilita il tuo guadagno del 1% (100 bps)
                         referralAccount: REFERRAL_ACCOUNT,
                         referralFee: 100 
                     },
-                    // Stile personalizzato per matchare WAVE
                     theme: 'dark',
-                    containerStyles: { maxHeight: '600px' }
                 });
             } else {
                 setTimeout(initJupiter, 500);
@@ -140,8 +131,7 @@
 
         function calculateRisk() {
             const cap = parseFloat(capInput.value) || 0;
-            const exposure = (cap * (currentRisk / 100)).toFixed(3);
-            resDiv.innerText = `${exposure} SOL`;
+            resDiv.innerText = `${(cap * (currentRisk / 100)).toFixed(3)} SOL`;
         }
 
         function setStrategy(name, percent) {
@@ -154,7 +144,6 @@
         function openModal() { document.getElementById('manifestModal').style.display = 'block'; document.body.style.overflow = 'hidden'; }
         function closeModal() { document.getElementById('manifestModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
-        capInput.addEventListener('input', calculateRisk);
         window.onload = () => {
             initJupiter();
             calculateRisk();
