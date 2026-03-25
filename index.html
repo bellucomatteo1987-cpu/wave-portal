@@ -5,103 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WAVE | Neural Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://terminal.jup.ag/main-v6.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; overflow-x: hidden; }
         .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.3); box-shadow: 0 0 40px rgba(52, 211, 153, 0.15); }
-        .iframe-container { width: 100%; height: 600px; border: none; background: #000; }
-        .risk-terminal { background: rgba(16, 24, 20, 0.9); border: 1px dashed #10b981; padding: 20px; border-radius: 1rem; width: 100%; max-width: 440px; margin-bottom: 20px; }
-        .risk-input, .risk-select { background: #000; border: 1px solid #10b981; color: #10b981; padding: 4px 8px; border-radius: 4px; outline: none; font-family: monospace; }
-        .risk-input { width: 80px; }
-        .risk-select { width: 140px; font-size: 10px; cursor: pointer; }
+        #integrated-terminal { width: 100%; min-height: 570px; display: flex; align-items: center; justify-content: center; background: #0b0e11; }
+        
+        .risk-terminal { background: rgba(6, 12, 10, 0.95); border: 1px solid #10b981; padding: 20px; border-radius: 1.5rem; width: 100%; max-width: 440px; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .risk-terminal::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #10b981, transparent); animation: scan 3s linear infinite; }
+        @keyframes scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        
+        .risk-input { background: #000; border: 1px solid #064e3b; color: #10b981; padding: 6px; border-radius: 6px; outline: none; font-family: monospace; transition: all 0.3s; }
+        .risk-input:focus { border-color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+        .strategy-btn { border: 1px solid #064e3b; padding: 5px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s; background: transparent; color: #064e3b; text-transform: uppercase; font-weight: bold; }
+        .strategy-btn.active { background: #10b981; color: #000; border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
+        .modal-content { background: #0b0e11; margin: 20px auto; padding: 30px; border: 1px solid #10b981; width: 95%; max-width: 700px; border-radius: 1.5rem; position: relative; max-height: 90vh; overflow-y: auto; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-black text-white">
 
     <main class="flex flex-col items-center justify-center min-h-screen py-10 px-4">
-        <h1 class="text-6xl font-black italic text-emerald-400 mb-2 tracking-tighter uppercase">Wave</h1>
-        <p class="text-emerald-500/60 mb-8 font-light tracking-widest uppercase text-xs italic">Neural Intelligence Interface</p>
+        <h1 class="text-6xl font-black italic text-emerald-400 mb-2 tracking-tighter uppercase text-center">Wave</h1>
+        <p class="text-emerald-500/50 mb-6 font-light tracking-[0.3em] uppercase text-[10px] italic">Neural Intelligence Interface</p>
         
-        <div class="risk-terminal text-emerald-400 font-mono text-xs">
-            <div class="flex justify-between mb-4 border-b border-emerald-900 pb-2">
-                <span class="font-bold tracking-tighter uppercase">[ Risk Terminal v.1.1 ]</span>
-                <span class="animate-pulse">● Active Protocol</span>
+        <div class="risk-terminal text-emerald-400 font-mono text-xs mb-8">
+            <div class="flex justify-between mb-4 border-b border-emerald-900 pb-2 italic">
+                <span class="font-bold">[ NEURAL RISK ENGINE v2.0 ]</span>
+                <span id="status-led" class="animate-pulse text-emerald-600">● SYSTEM STANDBY</span>
             </div>
-            <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                    <span>TOTAL CAPITAL (SOL):</span>
-                    <input type="number" id="capitale" class="risk-input text-right" value="10" step="1">
+            
+            <div class="space-y-4">
+                <div class="flex justify-between items-center text-[10px]">
+                    <span class="tracking-widest uppercase">Wallet Balance (SOL):</span>
+                    <input type="number" id="capitale" class="risk-input w-24 text-right" value="10" step="0.1">
                 </div>
-                <div class="flex justify-between items-center">
-                    <span>RISK PROFILE:</span>
-                    <select id="riskProfile" class="risk-select">
-                        <option value="1">BLUE (1% Safe)</option>
-                        <option value="2" selected>EMERALD (2% Std)</option>
-                        <option value="5">DEGEN (5% High)</option>
-                        <option value="custom">CUSTOM (%)</option>
-                    </select>
+                <div class="flex justify-between items-center text-[10px]">
+                    <span class="tracking-widest uppercase text-emerald-600">Risk per Trade (%):</span>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="riskPercent" class="risk-input w-16 text-right" value="2" step="0.5">
+                        <span>%</span>
+                    </div>
                 </div>
-                <div id="customRiskContainer" class="flex justify-between items-center hidden">
-                    <span>CUSTOM RISK (%):</span>
-                    <input type="number" id="rischio" class="risk-input text-right" value="2" max="100">
+                <div class="pt-2">
+                    <span class="block mb-2 text-[9px] uppercase opacity-50">Select Neural Strategy:</span>
+                    <div class="flex gap-2 justify-between">
+                        <button onclick="setStrategy('blue', 0.5)" id="btn-blue" class="strategy-btn">Blue Chip</button>
+                        <button onclick="setStrategy('solid', 2)" id="btn-solid" class="strategy-btn active">Solid</button>
+                        <button onclick="setStrategy('degen', 5)" id="btn-degen" class="strategy-btn">Degen</button>
+                        <button onclick="setStrategy('whale', 10)" id="btn-whale" class="strategy-btn">Whale</button>
+                    </div>
                 </div>
-                <div class="mt-4 pt-3 border-t border-emerald-900 flex justify-between items-center text-sm font-bold bg-emerald-950/30 p-2 rounded">
-                    <span>SAFE EXPOSURE:</span>
-                    <span id="risultato" class="text-white">0.200 SOL</span>
+                <div class="mt-4 pt-4 border-t border-emerald-900 flex justify-between items-center bg-emerald-950/30 p-3 rounded-lg">
+                    <span class="font-bold text-sm tracking-tighter text-emerald-500 italic">ALLOCATE:</span>
+                    <span id="risultato" class="text-white text-lg font-black tracking-tighter underline">0.200 SOL</span>
                 </div>
-            </div>
-            <div class="mt-2 text-[8px] text-emerald-700 text-center tracking-widest italic uppercase">
-                * WAVE *
             </div>
         </div>
 
         <div class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow bg-[#0b0e11] mb-8">
-            <iframe 
-                src="https://jup.ag/swap/SOL-USDC?platformFeeAndReferral=BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa&feeBps=20" 
-                class="iframe-container"
-                title="WAVE Terminal"
-                allow="clipboard-read; clipboard-write"
-            ></iframe>
+            <div id="integrated-terminal"></div>
         </div>
 
-        <a href="https://dub.sh/WAVEPortal" target="_blank" class="group flex flex-col items-center transition-all hover:scale-105">
-            <div class="px-8 py-3 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 font-bold tracking-widest text-sm hover:bg-emerald-500/20 transition-all uppercase">
-                Enter the WAVE Whales Portal
-            </div>
-            <div class="mt-2 text-emerald-500/40 text-[10px] uppercase tracking-widest italic">
-                H24 GeoPolitical Monitoring
-            </div>
-        </a>
+        <div class="flex flex-col gap-4 items-center">
+            <button onclick="openModal()" class="text-emerald-500/70 hover:text-emerald-400 font-mono text-[10px] uppercase tracking-widest transition-all border-b border-emerald-900 hover:border-emerald-500 pb-1 italic">
+                [ Explore Protocol Manifest ]
+            </button>
+            <a href="https://dub.sh/WAVEPortal" target="_blank" class="px-8 py-3 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 font-bold tracking-widest text-sm hover:bg-emerald-500/20 transition-all uppercase italic">
+                Join Whale Portal
+            </a>
+        </div>
     </main>
 
+    <div id="manifestModal" class="modal" onclick="closeModal()">
+        <div class="modal-content emerald-glow font-mono text-sm leading-relaxed" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center border-b border-emerald-900 pb-4 mb-6">
+                <h2 class="text-emerald-400 font-bold uppercase tracking-tighter text-xl italic underline">WAVE Protocol Manifest</h2>
+                <button onclick="closeModal()" class="text-emerald-900 hover:text-emerald-400 text-3xl">&times;</button>
+            </div>
+            <div class="space-y-6 text-emerald-100/90 italic">
+                <p>The WAVE project is a digital command center designed to navigate the Solana ecosystem with professional precision.</p>
+                <p><strong>I. Neural Engine:</strong> Real-time monitoring of whale movements and geopolitical shifts for 60-second action.</p>
+                <p><strong>II. Infrastructure:</strong> Powered by Gemini API for strategy and n8n for high-speed automation.</p>
+                <p><strong>III. Risk Protocol:</strong> The "Solid Protocol" ensures math-based capital protection.</p>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const capInput = document.getElementById('capitale');
-        const riskInput = document.getElementById('rischio');
-        const riskSelect = document.getElementById('riskProfile');
-        const customContainer = document.getElementById('customRiskContainer');
-        const resDiv = document.getElementById('risultato');
+        function openModal() { document.getElementById('manifestModal').style.display = 'block'; }
+        function closeModal() { document.getElementById('manifestModal').style.display = 'none'; }
 
-        function calcolaRischio() {
-            const capitale = parseFloat(capInput.value) || 0;
-            let rischioPercent;
-            
-            if (riskSelect.value === 'custom') {
-                customContainer.classList.remove('hidden');
-                rischioPercent = parseFloat(riskInput.value) || 0;
-            } else {
-                customContainer.classList.add('hidden');
-                rischioPercent = parseFloat(riskSelect.value);
-                riskInput.value = rischioPercent;
-            }
-
-            const esposizione = (capitale * (rischioPercent / 100)).toFixed(3);
-            resDiv.innerText = `${esposizione} SOL`;
+        // Risk Logic
+        function calculateRisk() {
+            const cap = parseFloat(document.getElementById('capitale').value) || 0;
+            const risk = parseFloat(document.getElementById('riskPercent').value) || 0;
+            document.getElementById('risultato').innerText = `${(cap * (risk / 100)).toFixed(3)} SOL`;
         }
+        function setStrategy(name, percent) {
+            document.getElementById('riskPercent').value = percent;
+            document.querySelectorAll('.strategy-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${name}`).classList.add('active');
+            calculateRisk();
+        }
+        document.getElementById('capitale').addEventListener('input', calculateRisk);
+        document.getElementById('riskPercent').addEventListener('input', calculateRisk);
 
-        capInput.addEventListener('input', calcolaRischio);
-        riskInput.addEventListener('input', calcolaRischio);
-        riskSelect.addEventListener('change', calcolaRischio);
-        calcolaRischio();
+        // Jupiter SDK Init - STESSI PARAMETRI DEL TUO FILE ORIGINALE
+        function initJupiter() {
+            const statusLed = document.getElementById('status-led');
+            if (window.Jupiter) {
+                window.Jupiter.init({
+                    displayMode: "integrated",
+                    integratedTargetId: "integrated-terminal",
+                    endpoint: "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43",
+                    formProps: { platformFeeBps: 100 },
+                    referrerAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa"
+                });
+                statusLed.innerText = "● PROTOCOL ONLINE";
+                statusLed.classList.replace('text-emerald-600', 'text-blue-400');
+            } else { setTimeout(initJupiter, 500); }
+        }
+        window.onload = initJupiter;
     </script>
 </body>
 </html>
