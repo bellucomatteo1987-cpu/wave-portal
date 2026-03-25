@@ -10,7 +10,6 @@
     <style>
         body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; overflow-x: hidden; }
         .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.3); box-shadow: 0 0 40px rgba(52, 211, 153, 0.15); }
-        #integrated-terminal { width: 100%; min-height: 570px; display: flex; align-items: center; justify-content: center; background: #0b0e11; }
         
         /* Advanced Risk Terminal Styling */
         .risk-terminal { background: rgba(6, 12, 10, 0.95); border: 1px solid #10b981; padding: 20px; border-radius: 1.5rem; width: 100%; max-width: 440px; margin-bottom: 20px; position: relative; overflow: hidden; }
@@ -22,10 +21,26 @@
         .strategy-btn { border: 1px solid #064e3b; padding: 5px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s; background: transparent; color: #064e3b; text-transform: uppercase; font-weight: bold; }
         .strategy-btn.active { background: #10b981; color: #000; border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
         
-        .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); backdrop-filter: blur(10px); }
-        .modal-content { background: #0b0e11; margin: 5% auto; padding: 30px; border: 1px solid #10b981; width: 90%; max-width: 700px; border-radius: 1.5rem; max-height: 80vh; overflow-y: auto; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
+        /* Modal Fixes */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
+        .modal-content { 
+            background: #0b0e11; 
+            margin: 20px auto; 
+            padding: 30px; 
+            border: 1px solid #10b981; 
+            width: 95%; 
+            max-width: 700px; 
+            border-radius: 1.5rem; 
+            position: relative;
+            max-height: 90vh; 
+            overflow-y: auto; /* Attiva lo scroll interno */
+            scrollbar-width: thin;
+            scrollbar-color: #10b981 #0b0e11;
+        }
+        
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: #0b0e11; }
+        .modal-content::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-black text-white">
@@ -42,12 +57,12 @@
             
             <div class="space-y-4">
                 <div class="flex justify-between items-center">
-                    <span class="tracking-widest uppercase">Wallet Balance (SOL):</span>
+                    <span class="tracking-widest uppercase text-[10px]">Wallet Balance (SOL):</span>
                     <input type="number" id="capitale" class="risk-input w-24 text-right" value="10" step="0.1">
                 </div>
 
                 <div class="flex justify-between items-center">
-                    <span class="tracking-widest uppercase text-emerald-600">Risk per Trade (%):</span>
+                    <span class="tracking-widest uppercase text-emerald-600 text-[10px]">Risk per Trade (%):</span>
                     <div class="flex items-center gap-2">
                         <input type="number" id="riskPercent" class="risk-input w-16 text-right" value="2" step="0.5">
                         <span class="text-[10px]">%</span>
@@ -66,34 +81,28 @@
 
                 <div class="mt-4 pt-4 border-t border-emerald-900">
                     <div class="flex justify-between items-center mb-1">
-                        <span class="uppercase text-[10px] opacity-60 italic">Position Size Advice:</span>
-                        <span id="strategy-label" class="text-[9px] bg-emerald-900/40 px-2 py-0.5 rounded text-white tracking-widest uppercase">Solid Protocol</span>
+                        <span class="uppercase text-[10px] opacity-60 italic tracking-widest">Position Size Advice:</span>
+                        <span id="strategy-label" class="text-[9px] bg-emerald-900/40 px-2 py-0.5 rounded text-white tracking-widest uppercase italic">Solid Protocol</span>
                     </div>
                     <div class="flex justify-between items-center bg-emerald-950/30 p-3 rounded-lg border border-emerald-800/30">
-                        <span class="font-bold text-sm">ALLOCATE:</span>
+                        <span class="font-bold text-sm tracking-tighter text-emerald-500">ALLOCATE:</span>
                         <span id="risultato" class="text-white text-lg font-black tracking-tighter underline">0.200 SOL</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow bg-[#0b0e11] mb-8">
-            <iframe 
-                src="https://jup.ag/swap/SOL-USDC?feeBps=100&referrer=BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa&platformFeeBps=100" 
-                class="w-full h-[600px] border-none"
-                title="WAVE Terminal"
-                allow="clipboard-read; clipboard-write"
-            ></iframe>
-        </div>
+        <div id="integrated-terminal" class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow bg-[#0b0e11] mb-8 min-h-[570px]">
+            </div>
 
         <div class="flex flex-col gap-4 items-center">
-            <button onclick="openModal()" class="text-emerald-500/70 hover:text-emerald-400 font-mono text-[10px] uppercase tracking-widest transition-all border-b border-emerald-900 hover:border-emerald-500 pb-1">
-                Explore Protocol Manifest [Read More]
+            <button onclick="openModal()" class="text-emerald-500/70 hover:text-emerald-400 font-mono text-[10px] uppercase tracking-[0.2em] transition-all border-b border-emerald-900 hover:border-emerald-500 pb-1 italic">
+                [ Explore Protocol Manifest ]
             </button>
 
             <a href="https://dub.sh/WAVEPortal" target="_blank" class="group flex flex-col items-center transition-all hover:scale-105">
-                <div class="px-8 py-3 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 font-bold tracking-widest text-sm hover:bg-emerald-500/20 transition-all uppercase">
-                    WAVE Whales Portal
+                <div class="px-8 py-3 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 font-bold tracking-widest text-sm hover:bg-emerald-500/20 transition-all uppercase italic">
+                    Join Whale Portal
                 </div>
             </a>
         </div>
@@ -102,35 +111,53 @@
     <div id="manifestModal" class="modal" onclick="closeModal()">
         <div class="modal-content emerald-glow font-mono text-sm leading-relaxed" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center border-b border-emerald-900 pb-4 mb-6">
-                <h2 class="text-emerald-400 font-bold uppercase tracking-tighter text-xl italic">WAVE Protocol Manifest</h2>
-                <button onclick="closeModal()" class="text-emerald-900 hover:text-emerald-400 text-2xl">&times;</button>
+                <h2 class="text-emerald-400 font-bold uppercase tracking-tighter text-xl italic underline">WAVE Protocol Manifest</h2>
+                <button onclick="closeModal()" class="text-emerald-900 hover:text-emerald-400 text-3xl font-light leading-none">&times;</button>
             </div>
             
-            <div class="space-y-6 text-emerald-100/80">
-                <p>The **WAVE** project is a high-frequency command center[cite: 1]. Designed for the Solana ecosystem, it provides professional-grade precision to those starting from minimal capital[cite: 1, 14].</p>
+            <div class="space-y-8 text-emerald-100/90 pb-6">
+                <p class="text-emerald-400 italic">The WAVE project is not just a website, but a digital command center designed to navigate the Solana ecosystem with professional precision, even from zero capital.</p>
+                
                 <section>
-                    <h3 class="text-emerald-400 font-bold uppercase mb-2 underline">1. Neural Engine</h3>
-                    <p>WAVE monitors whale movements, geopolitics, and social trends[cite: 3]. It translates data into action in under 60 seconds[cite: 4].</p>
+                    <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">I. Neural Engine Vision</h3>
+                    <p>In a millisecond-driven market, WAVE monitors whale movements, geopolitical shifts, and social trends (Elon, Trump, and whales). Our goal: transform raw data into investment action in under 60 seconds.</p>
                 </section>
+
                 <section>
-                    <h3 class="text-emerald-400 font-bold uppercase mb-2 underline">2. Infrastructure</h3>
-                    <ul class="list-disc list-inside space-y-1">
-                        <li>AI Strategy Generation (Gemini API) [cite: 5]</li>
-                        <li>Automated Response (n8n) [cite: 6]</li>
-                        <li>High-speed Market Scanners [cite: 7]</li>
+                    <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">II. Technical Infrastructure</h3>
+                    <ul class="space-y-3">
+                        <li class="flex gap-2"><span class="text-emerald-500">>></span> <span><strong>AI Integration:</strong> Gemini API for real-time strategy and data analysis.</span></li>
+                        <li class="flex gap-2"><span class="text-emerald-500">>></span> <span><strong>Automation:</strong> n8n backbone for instant tool synchronization.</span></li>
+                        <li class="flex gap-2"><span class="text-emerald-500">>></span> <span><strong>Scanning:</strong> Direct DexScreener/Jupiter integration for high-alpha asset detection.</span></li>
                     </ul>
                 </section>
-                <p class="pt-6 border-t border-emerald-900 italic text-[10px] opacity-50 uppercase tracking-widest">WAVE: Move fast, stay solid.</p>
+
+                <section>
+                    <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">III. Risk Terminal Protocol</h3>
+                    <p>The "Prudent & Solid Protocol" ensures you never over-expose. Enter your capital, select your neural strategy, and execute only what the math allows.</p>
+                </section>
+
+                <section>
+                    <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">IV. Portal Ecosystem</h3>
+                    <p>Join the WAVE Portal group for 24/7 world-event monitoring, real-time trading signals, and the core value of "Diamond Hands" credibility.</p>
+                </section>
+
+                <section>
+                    <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">V. Protocol Treasury</h3>
+                    <p>Every transaction fuels the ecosystem. Micro-fees are secured on-chain to maintain high-speed infrastructure and ensure continuous protocol evolution.</p>
+                </section>
+
+                <div class="pt-8 border-t border-emerald-900/50">
+                    <p class="text-[10px] opacity-60 uppercase tracking-[0.3em] text-center italic">WAVE: Move fast, stay solid. Degen action, prudent strategy.</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Modal Logic
-        function openModal() { document.getElementById('manifestModal').style.display = 'block'; }
-        function closeModal() { document.getElementById('manifestModal').style.display = 'none'; }
+        function openModal() { document.getElementById('manifestModal').style.display = 'block'; document.body.style.overflow = 'hidden'; }
+        function closeModal() { document.getElementById('manifestModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
-        // Risk Engine Logic
         const capInput = document.getElementById('capitale');
         const riskInput = document.getElementById('riskPercent');
         const resDiv = document.getElementById('risultato');
@@ -146,39 +173,28 @@
         function setStrategy(name, percent) {
             riskInput.value = percent;
             strategyLabel.innerText = `${name} Protocol`;
-            
-            // UI Button styling
             document.querySelectorAll('.strategy-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`btn-${name}`).classList.add('active');
-            
             calculateRisk();
         }
 
         capInput.addEventListener('input', calculateRisk);
-        riskInput.addEventListener('input', () => {
-            strategyLabel.innerText = "Custom Protocol";
-            document.querySelectorAll('.strategy-btn').forEach(btn => btn.classList.remove('active'));
-            calculateRisk();
-        });
+        riskInput.addEventListener('input', () => { strategyLabel.innerText = "Custom Protocol"; document.querySelectorAll('.strategy-btn').forEach(btn => btn.classList.remove('active')); calculateRisk(); });
 
-        // Jupiter SDK Init
         function initJupiter() {
             const statusLed = document.getElementById('status-led');
             if (window.Jupiter) {
-                try {
-                    window.Jupiter.init({
-                        displayMode: "integrated",
-                        integratedTargetId: "integrated-terminal",
-                        endpoint: "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43",
-                        formProps: { platformFeeBps: 100 },
-                        referrerAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa"
-                    });
-                    statusLed.innerText = "● PROTOCOL ONLINE";
-                    statusLed.classList.replace('text-emerald-600', 'text-blue-400');
-                } catch (e) { console.error(e); }
+                window.Jupiter.init({
+                    displayMode: "integrated",
+                    integratedTargetId: "integrated-terminal",
+                    endpoint: "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43",
+                    formProps: { platformFeeBps: 100 },
+                    referrerAccount: "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa"
+                });
+                statusLed.innerText = "● PROTOCOL ONLINE";
+                statusLed.classList.replace('text-emerald-600', 'text-blue-400');
             } else { setTimeout(initJupiter, 500); }
         }
-
         window.addEventListener('load', initJupiter);
     </script>
 </body>
