@@ -10,11 +10,12 @@
     <style>
         body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; overflow-x: hidden; }
         .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.3); box-shadow: 0 0 40px rgba(52, 211, 153, 0.15); }
+        #integrated-terminal { width: 100%; min-height: 570px; display: flex; align-items: center; justify-content: center; background: #0b0e11; }
         .risk-terminal { background: rgba(6, 12, 10, 0.95); border: 1px solid #10b981; padding: 20px; border-radius: 1.5rem; width: 100%; max-width: 440px; margin-bottom: 20px; position: relative; overflow: hidden; }
         .risk-terminal::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #10b981, transparent); animation: scan 3s linear infinite; }
         @keyframes scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         .risk-input { background: #000; border: 1px solid #064e3b; color: #10b981; padding: 6px; border-radius: 6px; outline: none; font-family: monospace; }
-        .strategy-btn { border: 1px solid #064e3b; padding: 5px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; color: #064e3b; text-transform: uppercase; font-weight: bold; }
+        .strategy-btn { border: 1px solid #064e3b; padding: 5px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; color: #064e3b; text-transform: uppercase; font-weight: bold; background: transparent; }
         .strategy-btn.active { background: #10b981; color: #000; border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0b0e11; margin: 20px auto; padding: 30px; border: 1px solid #10b981; width: 95%; max-width: 700px; border-radius: 1.5rem; max-height: 90vh; overflow-y: auto; }
@@ -28,37 +29,35 @@
         
         <div class="risk-terminal text-emerald-400 font-mono text-xs mb-8">
             <div class="flex justify-between mb-4 border-b border-emerald-900 pb-2 italic">
-                <span class="font-bold text-[10px]">[ NEURAL RISK ENGINE v2.0 ]</span>
+                <span class="font-bold">[ NEURAL RISK ENGINE v2.0 ]</span>
                 <span id="status-led" class="animate-pulse text-emerald-600">● SYSTEM STANDBY</span>
             </div>
             <div class="space-y-4">
-                <div class="flex justify-between items-center text-[10px]">
-                    <span class="tracking-widest uppercase italic">Wallet Balance (SOL):</span>
+                <div class="flex justify-between items-center">
+                    <span class="tracking-widest uppercase text-[10px]">Wallet Balance (SOL):</span>
                     <input type="number" id="capitale" class="risk-input w-24 text-right" value="10">
                 </div>
-                <div class="flex justify-between items-center text-[10px]">
-                    <span class="tracking-widest uppercase text-emerald-600 italic">Risk per Trade (%):</span>
+                <div class="flex justify-between items-center">
+                    <span class="tracking-widest uppercase text-emerald-600 text-[10px]">Risk per Trade (%):</span>
                     <div class="flex items-center gap-2">
                         <input type="number" id="riskPercent" class="risk-input w-16 text-right" value="2">
                         <span>%</span>
                     </div>
                 </div>
-                <div class="pt-2">
-                    <div class="flex gap-2 justify-between">
-                        <button onclick="setStrategy('blue', 0.5)" id="btn-blue" class="strategy-btn">Blue Chip</button>
-                        <button onclick="setStrategy('solid', 2)" id="btn-solid" class="strategy-btn active">Solid</button>
-                        <button onclick="setStrategy('degen', 5)" id="btn-degen" class="strategy-btn">Degen</button>
-                        <button onclick="setStrategy('whale', 10)" id="btn-whale" class="strategy-btn">Whale</button>
-                    </div>
+                <div class="pt-2 flex gap-2 justify-between">
+                    <button onclick="setStrategy('blue', 0.5)" id="btn-blue" class="strategy-btn">Blue Chip</button>
+                    <button onclick="setStrategy('solid', 2)" id="btn-solid" class="strategy-btn active">Solid</button>
+                    <button onclick="setStrategy('degen', 5)" id="btn-degen" class="strategy-btn">Degen</button>
+                    <button onclick="setStrategy('whale', 10)" id="btn-whale" class="strategy-btn">Whale</button>
                 </div>
                 <div class="mt-4 pt-4 border-t border-emerald-900 flex justify-between items-center bg-emerald-950/30 p-3 rounded-lg">
-                    <span class="font-bold text-sm text-emerald-500">ALLOCATE:</span>
+                    <span class="font-bold text-sm text-emerald-500 italic">ALLOCATE:</span>
                     <span id="risultato" class="text-white text-lg font-black underline">0.200 SOL</span>
                 </div>
             </div>
         </div>
 
-        <div id="integrated-terminal" class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow bg-[#0b0e11] mb-8 min-h-[570px]"></div>
+        <div id="integrated-terminal" class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow bg-[#0b0e11] mb-8"></div>
 
         <div class="flex flex-col gap-4 items-center">
             <button onclick="openModal()" class="text-emerald-500/70 hover:text-emerald-400 font-mono text-[10px] uppercase tracking-[0.2em] border-b border-emerald-900 pb-1 italic">
@@ -72,15 +71,16 @@
 
     <div id="manifestModal" class="modal" onclick="closeModal()">
         <div class="modal-content emerald-glow font-mono text-sm" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center border-b border-emerald-900 pb-4 mb-6 text-emerald-400">
-                <h2 class="font-bold uppercase tracking-tighter text-xl italic underline">WAVE Protocol Manifest</h2>
-                <button onclick="closeModal()" class="text-3xl">&times;</button>
+            <div class="flex justify-between items-center border-b border-emerald-900 pb-4 mb-6">
+                <h2 class="text-emerald-400 font-bold uppercase tracking-tighter text-xl italic underline">WAVE Protocol Manifest</h2>
+                <button onclick="closeModal()" class="text-emerald-400 text-3xl">&times;</button>
             </div>
-            <div class="space-y-6 text-emerald-100/90 italic">
-                <p>The WAVE project is a digital command center for the Solana ecosystem[cite: 3, 8].</p>
-                <p><strong>I. Neural Engine:</strong> Monitoring whales and geopolitics for 60-second action[cite: 3, 4].</p>
-                <p><strong>II. Infrastructure:</strong> AI-powered strategies via Gemini and n8n automation[cite: 5, 6].</p>
-                <p><strong>III. Risk Protocol:</strong> Prudent & Solid strategy for capital protection[cite: 10, 19].</p>
+            <div class="space-y-6 text-emerald-100/90 italic pb-4">
+                <p>The WAVE project is a digital command center for the Solana ecosystem, designed for professional precision from zero capital.</p>
+                <p><strong>I. Neural Engine:</strong> Monitoring whales and geopolitics for 60-second market action.</p>
+                <p><strong>II. Infrastructure:</strong> AI strategy analysis via Gemini and n8n high-speed automation.</p>
+                <p><strong>III. Risk Protocol:</strong> The "Solid Protocol" ensures math-based capital protection.</p>
+                <p><strong>IV. Ecosystem:</strong> H24 monitoring and real-time signals via the WAVE Portal.</p>
             </div>
         </div>
     </div>
@@ -89,7 +89,6 @@
         function openModal() { document.getElementById('manifestModal').style.display = 'block'; }
         function closeModal() { document.getElementById('manifestModal').style.display = 'none'; }
 
-        // Risk Logic
         function calculateRisk() {
             const cap = parseFloat(document.getElementById('capitale').value) || 0;
             const risk = parseFloat(document.getElementById('riskPercent').value) || 0;
@@ -104,10 +103,10 @@
         document.getElementById('capitale').addEventListener('input', calculateRisk);
         document.getElementById('riskPercent').addEventListener('input', calculateRisk);
 
-        // JUPITER RESTORED
+        // RIPRISTINO JUPITER ORIGINALE
         function initJupiter() {
             const statusLed = document.getElementById('status-led');
-            if (window.Jupiter && document.getElementById('integrated-terminal')) {
+            if (window.Jupiter) {
                 window.Jupiter.init({
                     displayMode: "integrated",
                     integratedTargetId: "integrated-terminal",
@@ -118,10 +117,10 @@
                 statusLed.innerText = "● PROTOCOL ONLINE";
                 statusLed.classList.replace('text-emerald-600', 'text-blue-400');
             } else {
-                setTimeout(initJupiter, 200);
+                setTimeout(initJupiter, 500);
             }
         }
-        window.addEventListener('load', initJupiter);
+        initJupiter();
     </script>
 </body>
 </html>
