@@ -11,7 +11,6 @@
         body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; overflow-x: hidden; }
         .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.3); box-shadow: 0 0 40px rgba(52, 211, 153, 0.15); }
         
-        /* Advanced Risk Terminal Styling */
         .risk-terminal { background: rgba(6, 12, 10, 0.95); border: 1px solid #10b981; padding: 20px; border-radius: 1.5rem; width: 100%; max-width: 440px; margin-bottom: 20px; position: relative; overflow: hidden; }
         .risk-terminal::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #10b981, transparent); animation: scan 3s linear infinite; }
         @keyframes scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
@@ -21,7 +20,6 @@
         .strategy-btn { border: 1px solid #064e3b; padding: 5px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s; background: transparent; color: #064e3b; text-transform: uppercase; font-weight: bold; }
         .strategy-btn.active { background: #10b981; color: #000; border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
         
-        /* Modal Fixes */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { 
             background: #0b0e11; 
@@ -33,14 +31,10 @@
             border-radius: 1.5rem; 
             position: relative;
             max-height: 90vh; 
-            overflow-y: auto; /* Attiva lo scroll interno */
+            overflow-y: auto; 
             scrollbar-width: thin;
             scrollbar-color: #10b981 #0b0e11;
         }
-        
-        .modal-content::-webkit-scrollbar { width: 6px; }
-        .modal-content::-webkit-scrollbar-track { background: #0b0e11; }
-        .modal-content::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-black text-white">
@@ -56,19 +50,17 @@
             </div>
             
             <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <span class="tracking-widest uppercase text-[10px]">Wallet Balance (SOL):</span>
+                <div class="flex justify-between items-center text-[10px]">
+                    <span class="tracking-widest uppercase">Wallet Balance (SOL):</span>
                     <input type="number" id="capitale" class="risk-input w-24 text-right" value="10" step="0.1">
                 </div>
-
-                <div class="flex justify-between items-center">
-                    <span class="tracking-widest uppercase text-emerald-600 text-[10px]">Risk per Trade (%):</span>
+                <div class="flex justify-between items-center text-[10px]">
+                    <span class="tracking-widest uppercase text-emerald-600">Risk per Trade (%):</span>
                     <div class="flex items-center gap-2">
                         <input type="number" id="riskPercent" class="risk-input w-16 text-right" value="2" step="0.5">
-                        <span class="text-[10px]">%</span>
+                        <span>%</span>
                     </div>
                 </div>
-
                 <div class="pt-2">
                     <span class="block mb-2 text-[9px] uppercase opacity-50">Select Neural Strategy:</span>
                     <div class="flex gap-2 justify-between">
@@ -78,7 +70,6 @@
                         <button onclick="setStrategy('whale', 10)" id="btn-whale" class="strategy-btn">Whale</button>
                     </div>
                 </div>
-
                 <div class="mt-4 pt-4 border-t border-emerald-900">
                     <div class="flex justify-between items-center mb-1">
                         <span class="uppercase text-[10px] opacity-60 italic tracking-widest">Position Size Advice:</span>
@@ -92,14 +83,12 @@
             </div>
         </div>
 
-        <div id="integrated-terminal" class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow bg-[#0b0e11] mb-8 min-h-[570px]">
-            </div>
+        <div id="integrated-terminal" class="w-full max-w-[440px] rounded-3xl overflow-hidden emerald-glow bg-[#0b0e11] mb-8 min-h-[570px]"></div>
 
         <div class="flex flex-col gap-4 items-center">
             <button onclick="openModal()" class="text-emerald-500/70 hover:text-emerald-400 font-mono text-[10px] uppercase tracking-[0.2em] transition-all border-b border-emerald-900 hover:border-emerald-500 pb-1 italic">
                 [ Explore Protocol Manifest ]
             </button>
-
             <a href="https://dub.sh/WAVEPortal" target="_blank" class="group flex flex-col items-center transition-all hover:scale-105">
                 <div class="px-8 py-3 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 font-bold tracking-widest text-sm hover:bg-emerald-500/20 transition-all uppercase italic">
                     Join Whale Portal
@@ -114,41 +103,26 @@
                 <h2 class="text-emerald-400 font-bold uppercase tracking-tighter text-xl italic underline">WAVE Protocol Manifest</h2>
                 <button onclick="closeModal()" class="text-emerald-900 hover:text-emerald-400 text-3xl font-light leading-none">&times;</button>
             </div>
-            
             <div class="space-y-8 text-emerald-100/90 pb-6">
-                <p class="text-emerald-400 italic">The WAVE project is not just a website, but a digital command center designed to navigate the Solana ecosystem with professional precision, even from zero capital.</p>
-                
+                <p class="text-emerald-400 italic">The WAVE project is a digital command center designed to navigate the Solana ecosystem with professional precision, even from zero capital.</p>
                 <section>
                     <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">I. Neural Engine Vision</h3>
-                    <p>In a millisecond-driven market, WAVE monitors whale movements, geopolitical shifts, and social trends (Elon, Trump, and whales). Our goal: transform raw data into investment action in under 60 seconds.</p>
+                    <p>In a millisecond-driven market, WAVE monitors whale movements, geopolitical shifts, and social trends. Our goal: transform raw data into investment action in under 60 seconds.</p>
                 </section>
-
                 <section>
                     <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">II. Technical Infrastructure</h3>
                     <ul class="space-y-3">
-                        <li class="flex gap-2"><span class="text-emerald-500">>></span> <span><strong>AI Integration:</strong> Gemini API for real-time strategy and data analysis.</span></li>
-                        <li class="flex gap-2"><span class="text-emerald-500">>></span> <span><strong>Automation:</strong> n8n backbone for instant tool synchronization.</span></li>
-                        <li class="flex gap-2"><span class="text-emerald-500">>></span> <span><strong>Scanning:</strong> Direct DexScreener/Jupiter integration for high-alpha asset detection.</span></li>
+                        <li class="flex gap-2"><span class="text-emerald-500">>></span> <span><strong>AI Integration:</strong> Gemini API for real-time strategy analysis.</span></li>
+                        <li class="flex gap-2"><span class="text-emerald-500">>></span> <span><strong>Automation:</strong> n8n backbone for instant synchronization.</span></li>
+                        <li class="flex gap-2"><span class="text-emerald-500">>></span> <span><strong>Scanning:</strong> Direct DexScreener/Jupiter integration.</span></li>
                     </ul>
                 </section>
-
                 <section>
                     <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">III. Risk Terminal Protocol</h3>
-                    <p>The "Prudent & Solid Protocol" ensures you never over-expose. Enter your capital, select your neural strategy, and execute only what the math allows.</p>
+                    <p>The "Prudent & Solid Protocol" ensures you never over-expose. Enter your capital, select your strategy, and execute only what the math allows.</p>
                 </section>
-
-                <section>
-                    <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">IV. Portal Ecosystem</h3>
-                    <p>Join the WAVE Portal group for 24/7 world-event monitoring, real-time trading signals, and the core value of "Diamond Hands" credibility.</p>
-                </section>
-
-                <section>
-                    <h3 class="text-emerald-500 font-bold uppercase mb-3 tracking-widest border-l-2 border-emerald-500 pl-3">V. Protocol Treasury</h3>
-                    <p>Every transaction fuels the ecosystem. Micro-fees are secured on-chain to maintain high-speed infrastructure and ensure continuous protocol evolution.</p>
-                </section>
-
                 <div class="pt-8 border-t border-emerald-900/50">
-                    <p class="text-[10px] opacity-60 uppercase tracking-[0.3em] text-center italic">WAVE: Move fast, stay solid. Degen action, prudent strategy.</p>
+                    <p class="text-[10px] opacity-60 uppercase tracking-[0.3em] text-center italic">WAVE: Move fast, stay solid.</p>
                 </div>
             </div>
         </div>
@@ -158,6 +132,7 @@
         function openModal() { document.getElementById('manifestModal').style.display = 'block'; document.body.style.overflow = 'hidden'; }
         function closeModal() { document.getElementById('manifestModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
+        // Risk Logic
         const capInput = document.getElementById('capitale');
         const riskInput = document.getElementById('riskPercent');
         const resDiv = document.getElementById('risultato');
@@ -166,8 +141,7 @@
         function calculateRisk() {
             const cap = parseFloat(capInput.value) || 0;
             const risk = parseFloat(riskInput.value) || 0;
-            const allocation = (cap * (risk / 100)).toFixed(3);
-            resDiv.innerText = `${allocation} SOL`;
+            resDiv.innerText = `${(cap * (risk / 100)).toFixed(3)} SOL`;
         }
 
         function setStrategy(name, percent) {
@@ -181,6 +155,7 @@
         capInput.addEventListener('input', calculateRisk);
         riskInput.addEventListener('input', () => { strategyLabel.innerText = "Custom Protocol"; document.querySelectorAll('.strategy-btn').forEach(btn => btn.classList.remove('active')); calculateRisk(); });
 
+        // JUPITER FIX: Ricarica corretta dell'SDK
         function initJupiter() {
             const statusLed = document.getElementById('status-led');
             if (window.Jupiter) {
@@ -193,9 +168,11 @@
                 });
                 statusLed.innerText = "● PROTOCOL ONLINE";
                 statusLed.classList.replace('text-emerald-600', 'text-blue-400');
-            } else { setTimeout(initJupiter, 500); }
+            } else {
+                setTimeout(initJupiter, 500);
+            }
         }
-        window.addEventListener('load', initJupiter);
+        window.onload = initJupiter;
     </script>
 </body>
 </html>
