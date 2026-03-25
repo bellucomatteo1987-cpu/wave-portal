@@ -6,17 +6,18 @@
     <title>WAVE | Neural Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
-    <script src="https://terminal.jup.ag/main-v6.js"></script>
+    <script src="https://terminal.jup.ag/main-v6.js" defer></script>
     <style>
         body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; overflow-x: hidden; }
         .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.3); box-shadow: 0 0 40px rgba(52, 211, 153, 0.15); }
         
-        /* FIX MOBILE: Terminale Jupiter */
+        /* FIX DEFINITIVO VISIBILITÀ */
         #integrated-terminal { 
-            width: 100%; 
-            min-height: 570px; /* Altezza minima necessaria per caricare la UI di Jupiter */
-            height: auto;
-            background: #0b0e11; 
+            width: 100% !important; 
+            min-height: 570px !important; 
+            height: 570px !important;
+            background: #0b0e11;
+            display: block !important;
         }
 
         .risk-terminal { 
@@ -32,7 +33,6 @@
         }
         .strategy-btn.active { background: #10b981; color: #000; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
 
-        /* Modal Fix */
         .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(10px); overflow-y: auto; }
         .modal-content { background: #0b0e11; margin: 20px auto; padding: 25px; border: 1px solid #10b981; width: 90%; max-width: 600px; border-radius: 1.5rem; color: #fff; }
     </style>
@@ -43,10 +43,10 @@
         <h1 class="text-5xl md:text-6xl font-black italic text-emerald-400 mb-2 tracking-tighter uppercase leading-none text-center">Wave</h1>
         <p class="text-emerald-500/50 mb-8 font-light tracking-[0.4em] uppercase text-[8px] italic text-center">Neural Intelligence Interface</p>
 
-        <div class="risk-terminal text-emerald-400 font-mono text-xs">
-            <div class="flex justify-between mb-4 border-b border-emerald-900 pb-2 italic">
-                <span class="font-bold tracking-widest text-[9px]">[ NEURAL RISK ENGINE ]</span>
-                <span id="status-led" class="animate-pulse text-emerald-500 text-[9px]">● ONLINE</span>
+        <div class="risk-terminal text-emerald-400 font-mono text-xs shadow-2xl">
+            <div class="flex justify-between mb-4 border-b border-emerald-900 pb-2 italic text-[9px]">
+                <span class="font-bold tracking-widest">[ NEURAL RISK ENGINE ]</span>
+                <span class="animate-pulse text-emerald-500">● ONLINE</span>
             </div>
             
             <div class="space-y-4">
@@ -56,7 +56,6 @@
                 </div>
 
                 <div class="space-y-2">
-                    <span class="opacity-80 uppercase text-[9px]">Strategy:</span>
                     <div class="flex gap-2">
                         <button onclick="setStrategy('blue', 1)" id="btn-blue" class="strategy-btn flex-1">Blue</button>
                         <button onclick="setStrategy('solid', 2)" id="btn-solid" class="strategy-btn active flex-1">Solid</button>
@@ -88,43 +87,28 @@
         </div>
     </main>
 
-    <div id="manifestModal" class="modal" onclick="closeModal()">
-        <div class="modal-content emerald-glow font-mono text-sm leading-relaxed" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center border-b border-emerald-900 pb-4 mb-4">
-                <h2 class="text-emerald-400 font-bold uppercase italic text-lg tracking-tighter">Manifesto</h2>
-                <button onclick="closeModal()" class="text-emerald-400 text-3xl">&times;</button>
-            </div>
-            <div class="space-y-4 text-emerald-100/80 italic text-xs">
-                <p>WAVE: Neural Interface for Solana. Optimized with Ultra Routing (Metis + RFQ).</p>
-                <p>Managed execution via Jupiter V2 API. 100 bps protocol sustainability fee applied.</p>
-            </div>
-        </div>
-    </div>
-
     <script>
         const REFERRAL_ACCOUNT = "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa";
 
-        function initJupiter() {
-            if (window.Jupiter) {
+        function launchJupiter() {
+            if (window.Jupiter && document.getElementById('integrated-terminal')) {
+                console.log("WAVE: Initializing Jupiter...");
                 window.Jupiter.init({
                     displayMode: "integrated",
                     integratedTargetId: "integrated-terminal",
                     endpoint: "https://mainnet.helius-rpc.com/?api-key=8fb0c505-b909-489e-b063-5bd1816f2b43",
-                    strictTokenList: false,
                     formProps: {
-                        fixedOutputMint: false,
-                        swapMode: "ExactIn",
                         referralAccount: REFERRAL_ACCOUNT,
                         referralFee: 100 
                     },
-                    theme: 'dark',
                 });
             } else {
-                setTimeout(initJupiter, 500);
+                console.log("WAVE: Waiting for SDK...");
+                setTimeout(launchJupiter, 1000);
             }
         }
 
-        // Logic Risk
+        // Risk Logic
         const capInput = document.getElementById('capitale');
         const resDiv = document.getElementById('risultato');
         let currentRisk = 2;
@@ -144,10 +128,9 @@
         function openModal() { document.getElementById('manifestModal').style.display = 'block'; document.body.style.overflow = 'hidden'; }
         function closeModal() { document.getElementById('manifestModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
-        window.onload = () => {
-            initJupiter();
-            calculateRisk();
-        };
+        // Avvio
+        window.addEventListener('DOMContentLoaded', launchJupiter);
+        calculateRisk();
     </script>
 </body>
 </html>
