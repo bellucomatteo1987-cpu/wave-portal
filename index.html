@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; color: white; }
-        .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.4); box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); }
         .risk-terminal { 
             background: linear-gradient(145deg, rgba(6, 10, 8, 0.98), rgba(16, 24, 20, 0.95)); 
             border: 1px solid #10b981; padding: 24px; border-radius: 1.5rem; 
@@ -29,16 +28,12 @@
             display: block;
         }
         .neural-button:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
-        
-        /* Stile specifico per il bottone Cash-out */
         .cashout-btn {
             background: #fff; color: #000; font-weight: 800;
             padding: 14px; border-radius: 1rem; width: 100%;
             text-align: center; text-transform: uppercase; font-style: italic;
-            letter-spacing: 0.05em; transition: all 0.3s;
-            display: block; font-size: 12px;
+            transition: all 0.3s; display: block; font-size: 12px;
         }
-        .cashout-btn:hover { background: #10b981; transform: translateY(-2px); }
     </style>
 </head>
 <body class="flex flex-col items-center p-6 min-h-screen">
@@ -74,63 +69,13 @@
     </div>
 
     <div class="w-full max-w-[420px] space-y-4 mb-12">
-        <a id="jupiter-link" href="#" target="_blank" class="neural-button">
-            Terminal Swap →
-        </a>
+        <a id="jupiter-link" href="#" target="_blank" class="neural-button">Terminal Swap →</a>
 
-        <button onclick="openCashout()" class="cashout-btn">
-            Withdraw Euro (Instant Card) ↓
-        </button>
+        <button onclick="openCashout()" class="cashout-btn">Withdraw Euro (Instant Card) ↓</button>
 
-        <a href="https://dub.sh/WAVEPortal" target="_blank" class="block w-full py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 font-bold text-center text-xs uppercase italic tracking-widest hover:bg-emerald-500/20 transition-all">
+        <a href="https://dub.sh/WAVEPortal" target="_blank" class="block w-full py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 font-bold text-center text-xs uppercase italic hover:bg-emerald-500/20 transition-all">
             [ Access WAVE Portal ]
         </a>
-
-        <a href="https://hpauc2a.short.gy/wavex" target="_blank" class="block w-full py-4 bg-white/5 border border-white/20 rounded-2xl text-white font-bold text-center text-xs uppercase italic tracking-widest hover:bg-white/10 transition-all">
-            X
-        </a>
-    </div>
-
-    <div class="w-full max-w-[420px] mb-12">
-        <img src="Gemini_Generated_Image_o1bem8o1bem8o1be.png" alt="WAVE Funnel" class="w-full h-auto rounded-3xl border border-emerald-500/20 shadow-[0_0_50px_rgba(16,185,129,0.1)]">
-    </div>
-
-    <div class="w-full max-w-[420px] font-mono mb-20">
-        <div class="flex items-center gap-4 mb-8">
-            <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-emerald-900 to-emerald-500"></div>
-            <span class="text-[10px] text-emerald-500 tracking-[0.5em] uppercase font-bold italic">Manifesto</span>
-            <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent via-emerald-900 to-emerald-500"></div>
-        </div>
-
-        <ul class="space-y-6">
-            <li class="flex items-start gap-4 group">
-                <span class="text-emerald-500 font-black text-xs mt-1 group-hover:animate-pulse">01</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Neural Command Center</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Professional-grade trading interface engineered for millisecond precision on the Solana network.</p>
-                </div>
-            </li>
-            <li class="flex items-start gap-4 group">
-                <span class="text-emerald-400 font-black text-xs mt-1 group-hover:animate-pulse">02</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">60s Execution Engine</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Real-time monitoring of Whales, Geopolitics, and Social Trends for sub-minute action.</p>
-                </div>
-            </li>
-            <li class="flex items-start gap-4 group">
-                <span class="text-emerald-300 font-black text-xs mt-1 group-hover:animate-pulse">03</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Prudent Risk Protocol</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Advanced capital management tools designed to scale small portfolios with total credibility.</p>
-                </div>
-            </li>
-        </ul>
-
-        <div class="mt-12 flex justify-center">
-            <div class="px-4 py-1 border border-emerald-500/20 rounded-full">
-                <span class="text-[8px] text-emerald-500/40 tracking-[0.3em] uppercase italic font-light">Neural Intelligence Active // waveproject.site</span>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -143,19 +88,12 @@
             document.getElementById('jupiter-link').href = baseUrl + params;
         }
 
-        // Funzione per il prelievo Euro tracciato su Jupiter
-function openCashout() {
-    // Il tuo wallet per ricevere le commissioni (già presente nel tuo codice)
-    const wallet = "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa";
-    
-    // Parametri: 
-    // - onlyOfframp=true (solo vendita SOL per Euro)
-    // - partnerFee=100 (1% di commissione per te)
-    // - themeName=dark (stile WAVE)
-    const url = `https://buy.onramper.com/?themeName=dark&apiKey=pk_prod_01H1YEXY9C7M2K5X5R6J4G6R8Y&defaultCrypto=SOL&defaultFiat=EUR&onlyOfframp=true&partnerFee=100&walletAddress=${wallet}`;
-    
-    window.open(url, '_blank');
-}
+        function openCashout() {
+            // Aggregatore Onramper (usato da Jupiter) ma con link diretto stabile
+            // partnerFee=100 garantisce il tuo 1% di commissione
+            const url = `https://buy.onramper.com/?themeName=dark&apiKey=pk_prod_01H1YEXY9C7M2K5X5R6J4G6R8Y&defaultCrypto=SOL&defaultFiat=EUR&onlyOfframp=true&partnerFee=100&walletAddress=${REF_ACCOUNT}`;
+            window.open(url, '_blank');
+        }
 
         function calculate() {
             const cap = parseFloat(document.getElementById('capitale').value) || 0;
@@ -172,8 +110,6 @@ function openCashout() {
         }
 
         document.getElementById('capitale').addEventListener('input', calculate);
-        
-        // Init
         updateJupiterLink();
         calculate();
     </script>
