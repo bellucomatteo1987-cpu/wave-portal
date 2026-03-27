@@ -29,6 +29,16 @@
             display: block;
         }
         .neural-button:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
+        
+        /* Stile specifico per il bottone Cash-out */
+        .cashout-btn {
+            background: #fff; color: #000; font-weight: 800;
+            padding: 14px; border-radius: 1rem; width: 100%;
+            text-align: center; text-transform: uppercase; font-style: italic;
+            letter-spacing: 0.05em; transition: all 0.3s;
+            display: block; font-size: 12px;
+        }
+        .cashout-btn:hover { background: #10b981; transform: translateY(-2px); }
     </style>
 </head>
 <body class="flex flex-col items-center p-6 min-h-screen">
@@ -63,10 +73,14 @@
         </div>
     </div>
 
-    <div class="w-full max-w-[420px] space-y-6 mb-12">
+    <div class="w-full max-w-[420px] space-y-4 mb-12">
         <a id="jupiter-link" href="#" target="_blank" class="neural-button">
             Terminal Swap →
         </a>
+
+        <button onclick="openCashout()" class="cashout-btn">
+            Withdraw Euro (Instant Card) ↓
+        </button>
 
         <a href="https://dub.sh/WAVEPortal" target="_blank" class="block w-full py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 font-bold text-center text-xs uppercase italic tracking-widest hover:bg-emerald-500/20 transition-all">
             [ Access WAVE Portal ]
@@ -96,7 +110,6 @@
                     <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Professional-grade trading interface engineered for millisecond precision on the Solana network.</p>
                 </div>
             </li>
-
             <li class="flex items-start gap-4 group">
                 <span class="text-emerald-400 font-black text-xs mt-1 group-hover:animate-pulse">02</span>
                 <div>
@@ -104,28 +117,11 @@
                     <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Real-time monitoring of Whales, Geopolitics, and Social Trends for sub-minute action.</p>
                 </div>
             </li>
-
             <li class="flex items-start gap-4 group">
                 <span class="text-emerald-300 font-black text-xs mt-1 group-hover:animate-pulse">03</span>
                 <div>
                     <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Prudent Risk Protocol</span>
                     <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Advanced capital management tools designed to scale small portfolios with total credibility.</p>
-                </div>
-            </li>
-
-            <li class="flex items-start gap-4 group">
-                <span class="text-emerald-200 font-black text-xs mt-1 group-hover:animate-pulse">04</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Diamond Hands Community</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">24/7 market surveillance and high-conviction signals for an exclusive degen elite.</p>
-                </div>
-            </li>
-
-            <li class="flex items-start gap-4 group">
-                <span class="text-white font-black text-xs mt-1 group-hover:animate-pulse">05</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Sustainable Growth</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Automated micro-fee architecture securing infrastructure scalability and project future.</p>
                 </div>
             </li>
         </ul>
@@ -145,6 +141,13 @@
             const baseUrl = "https://jup.ag/swap/SOL-USDC";
             const params = `?feeBps=100&referrer=${REF_ACCOUNT}`;
             document.getElementById('jupiter-link').href = baseUrl + params;
+        }
+
+        // Funzione per il prelievo Euro tracciato su Jupiter
+        function openCashout() {
+            // feeBps=100 aggiunge l'1% di commissione per te come partner
+            const cashoutUrl = `https://jup.ag/cashout?referrer=${REF_ACCOUNT}&feeBps=100`;
+            window.open(cashoutUrl, '_blank');
         }
 
         function calculate() {
