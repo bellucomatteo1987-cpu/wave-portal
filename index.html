@@ -144,11 +144,18 @@
         }
 
         // Funzione per il prelievo Euro tracciato su Jupiter
-        function openCashout() {
-            // feeBps=100 aggiunge l'1% di commissione per te come partner
-            const cashoutUrl = `https://jup.ag/cashout?referrer=${REF_ACCOUNT}&feeBps=100`;
-            window.open(cashoutUrl, '_blank');
-        }
+function openCashout() {
+    // Il tuo wallet per ricevere le commissioni (già presente nel tuo codice)
+    const wallet = "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa";
+    
+    // Parametri: 
+    // - onlyOfframp=true (solo vendita SOL per Euro)
+    // - partnerFee=100 (1% di commissione per te)
+    // - themeName=dark (stile WAVE)
+    const url = `https://buy.onramper.com/?themeName=dark&apiKey=pk_prod_01H1YEXY9C7M2K5X5R6J4G6R8Y&defaultCrypto=SOL&defaultFiat=EUR&onlyOfframp=true&partnerFee=100&walletAddress=${wallet}`;
+    
+    window.open(url, '_blank');
+}
 
         function calculate() {
             const cap = parseFloat(document.getElementById('capitale').value) || 0;
