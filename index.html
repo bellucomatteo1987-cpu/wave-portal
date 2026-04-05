@@ -29,6 +29,15 @@
             display: block;
         }
         .neural-button:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
+        
+        /* Stile per il Report */
+        .report-terminal {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px dashed rgba(16, 185, 129, 0.3);
+            padding: 15px;
+            border-radius: 1rem;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body class="flex flex-col items-center p-6 min-h-screen">
@@ -63,6 +72,16 @@
         </div>
     </div>
 
+    <div class="w-full max-w-[420px] mb-8 report-terminal">
+        <div class="flex justify-between items-center mb-3">
+            <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest">Live Intelligence</span>
+            <span id="last-update" class="text-[8px] text-emerald-500/50 uppercase">Syncing...</span>
+        </div>
+        <div id="report-text" class="text-[11px] text-emerald-100/80 leading-relaxed italic">
+            Inizializzazione connessione neurale...
+        </div>
+    </div>
+
     <div class="w-full max-w-[420px] space-y-6 mb-12">
         <a id="jupiter-link" href="#" target="_blank" class="neural-button">
             Terminal Swap →
@@ -71,75 +90,25 @@
         <a href="https://dub.sh/WAVEPortal" target="_blank" class="block w-full py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 font-bold text-center text-xs uppercase italic tracking-widest hover:bg-emerald-500/20 transition-all">
             [ Access WAVE Portal ]
         </a>
-
-        <a href="https://hpauc2a.short.gy/wavex" target="_blank" class="block w-full py-4 bg-white/5 border border-white/20 rounded-2xl text-white font-bold text-center text-xs uppercase italic tracking-widest hover:bg-white/10 transition-all">
-            X
-        </a>
-    </div>
-
-    <div class="w-full max-w-[420px] mb-12">
-        <img src="Gemini_Generated_Image_o1bem8o1bem8o1be.png" alt="WAVE Funnel" class="w-full h-auto rounded-3xl border border-emerald-500/20 shadow-[0_0_50px_rgba(16,185,129,0.1)]">
-    </div>
-
-    <div class="w-full max-w-[420px] font-mono mb-20">
-        <div class="flex items-center gap-4 mb-8">
-            <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-emerald-900 to-emerald-500"></div>
-            <span class="text-[10px] text-emerald-500 tracking-[0.5em] uppercase font-bold italic">Manifesto</span>
-            <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent via-emerald-900 to-emerald-500"></div>
-        </div>
-
-        <ul class="space-y-6">
-            <li class="flex items-start gap-4 group">
-                <span class="text-emerald-500 font-black text-xs mt-1 group-hover:animate-pulse">01</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Neural Command Center</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Professional-grade trading interface engineered for millisecond precision on the Solana network.</p>
-                </div>
-            </li>
-
-            <li class="flex items-start gap-4 group">
-                <span class="text-emerald-400 font-black text-xs mt-1 group-hover:animate-pulse">02</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">60s Execution Engine</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Real-time monitoring of Whales, Geopolitics, and Social Trends for sub-minute action.</p>
-                </div>
-            </li>
-
-            <li class="flex items-start gap-4 group">
-                <span class="text-emerald-300 font-black text-xs mt-1 group-hover:animate-pulse">03</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Prudent Risk Protocol</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Advanced capital management tools designed to scale small portfolios with total credibility.</p>
-                </div>
-            </li>
-
-            <li class="flex items-start gap-4 group">
-                <span class="text-emerald-200 font-black text-xs mt-1 group-hover:animate-pulse">04</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Diamond Hands Community</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">24/7 market surveillance and high-conviction signals for an exclusive degen elite.</p>
-                </div>
-            </li>
-
-            <li class="flex items-start gap-4 group">
-                <span class="text-white font-black text-xs mt-1 group-hover:animate-pulse">05</span>
-                <div>
-                    <span class="block text-white text-[11px] font-bold uppercase tracking-wider italic">Sustainable Growth</span>
-                    <p class="text-emerald-500/60 text-[10px] leading-relaxed mt-1">Automated micro-fee architecture securing infrastructure scalability and project future.</p>
-                </div>
-            </li>
-        </ul>
-
-        <div class="mt-12 flex justify-center">
-            <div class="px-4 py-1 border border-emerald-500/20 rounded-full">
-                <span class="text-[8px] text-emerald-500/40 tracking-[0.3em] uppercase italic font-light">Neural Intelligence Active // waveproject.site</span>
-            </div>
-        </div>
     </div>
 
     <script>
         const REF_ACCOUNT = "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa";
         let currentRisk = 2;
+
+        // --- FUNZIONE PER CARICARE IL REPORT DA GITHUB ---
+        async function fetchWaveReport() {
+            const reportUrl = 'https://raw.githubusercontent.com/bellucomatteo1987-cpu/wave-portal/main/data.json';
+            try {
+                const response = await fetch(reportUrl);
+                const data = await response.json();
+                
+                document.getElementById('last-update').innerText = `Updated: ${data.last_update}`;
+                document.getElementById('report-text').innerText = data.report_text;
+            } catch (e) {
+                document.getElementById('report-text').innerText = "Terminal Offline: Check back shortly.";
+            }
+        }
 
         function updateJupiterLink() {
             const baseUrl = "https://jup.ag/swap/SOL-USDC";
@@ -166,6 +135,7 @@
         // Init
         updateJupiterLink();
         calculate();
+        fetchWaveReport(); // Carica il report all'apertura
     </script>
 </body>
 </html>
