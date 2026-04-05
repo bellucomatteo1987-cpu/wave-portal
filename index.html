@@ -30,7 +30,6 @@
         }
         .neural-button:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
         
-        /* Stile per il Report */
         .report-terminal {
             background: rgba(16, 185, 129, 0.05);
             border: 1px dashed rgba(16, 185, 129, 0.3);
@@ -96,16 +95,26 @@
         const REF_ACCOUNT = "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa";
         let currentRisk = 2;
 
-        // --- FUNZIONE PER CARICARE IL REPORT DA GITHUB ---
         async function fetchWaveReport() {
+            // URL raw del tuo file data.json
             const reportUrl = 'https://raw.githubusercontent.com/bellucomatteo1987-cpu/wave-portal/main/data.json';
+            
             try {
-                const response = await fetch(reportUrl);
+                // Aggiungiamo un timestamp alla richiesta per forzare il browser a scaricare i dati nuovi
+                const response = await fetch(`${reportUrl}?t=${new Date().getTime()}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
                 const data = await response.json();
                 
-                document.getElementById('last-update').innerText = `Updated: ${data.last_update}`;
-                document.getElementById('report-text').innerText = data.report_text;
+                // Visualizzazione dati se presenti, altrimenti messaggio di errore
+                if (data.report_text) {
+                    document.getElementById('last-update').innerText = `Updated: ${data.last_update}`;
+                    document.getElementById('report-text').innerText = data.report_text;
+                } else {
+                    document.getElementById('report-text').innerText = "Data stream corrupted.";
+                }
             } catch (e) {
+                console.error("Fetch error:", e);
                 document.getElementById('report-text').innerText = "Terminal Offline: Check back shortly.";
             }
         }
@@ -132,10 +141,10 @@
 
         document.getElementById('capitale').addEventListener('input', calculate);
         
-        // Init
+        // Inizializzazione automatica
         updateJupiterLink();
         calculate();
-        fetchWaveReport(); // Carica il report all'apertura
+        fetchWaveReport(); 
     </script>
 </body>
 </html>
