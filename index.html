@@ -1,150 +1,126 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAVE | Neural Interface</title>
+    <title>WAVE | SOL Reclaimer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000; font-family: 'Space Grotesk', sans-serif; margin: 0; color: white; }
-        .emerald-glow { border: 1px solid rgba(52, 211, 153, 0.4); box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); }
+        /* Palette Wave: Azzurro #00d4ff, Bianco #fff, Sfondo scuro */
+        body { background-color: #050b14; font-family: 'Space Grotesk', sans-serif; margin: 0; color: white; }
+        
+        /* Glow Azzurro per Wave */
+        .wave-glow { border: 1px solid rgba(0, 212, 255, 0.4); box-shadow: 0 0 30px rgba(0, 212, 255, 0.15); }
+        
+        /* Terminale con bordi Azzurri */
         .risk-terminal { 
-            background: linear-gradient(145deg, rgba(6, 10, 8, 0.98), rgba(16, 24, 20, 0.95)); 
-            border: 1px solid #10b981; padding: 24px; border-radius: 1.5rem; 
+            background: linear-gradient(145deg, rgba(10, 20, 30, 0.98), rgba(5, 11, 20, 0.95)); 
+            border: 1px solid #00d4ff; padding: 24px; border-radius: 1.5rem; 
             width: 100%; max-width: 420px;
         }
+
+        /* Bottoni Strategia - Mix Giallo/Verde di Sol Incinerator */
         .strategy-btn {
-            border: 1px solid #064e3b; padding: 10px; border-radius: 8px; 
-            font-size: 11px; cursor: pointer; background: transparent; color: #10b981;
+            border: 1px solid #00d4ff; padding: 10px; border-radius: 8px; 
+            font-size: 11px; cursor: pointer; background: transparent; color: #00d4ff;
             font-weight: bold; flex: 1; text-align: center; transition: 0.3s;
         }
-        .strategy-btn.active { background: #10b981; color: #000; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        .strategy-btn.active { 
+            background: #eab308; /* Giallo Sol Incinerator */
+            color: #000; 
+            border-color: #eab308;
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.4); 
+        }
+
+        /* Bottone Principale - Verde/Giallo Sol Incinerator con stile Wave */
         .neural-button {
-            background: #10b981; color: #000; font-weight: 900;
+            background: linear-gradient(90deg, #22c55e, #eab308); /* Verde a Giallo */
+            color: #000; font-weight: 900;
             padding: 18px; border-radius: 1rem; width: 100%; max-width: 420px;
             text-align: center; text-transform: uppercase; font-style: italic;
             letter-spacing: 0.1em; transition: all 0.3s;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
             display: block;
         }
-        .neural-button:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
+        .neural-button:hover { 
+            transform: scale(1.02); 
+            box-shadow: 0 0 40px rgba(234, 179, 8, 0.5); 
+        }
         
         .report-terminal {
-            background: rgba(16, 185, 129, 0.05);
-            border: 1px dashed rgba(16, 185, 129, 0.3);
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px dashed rgba(0, 212, 255, 0.3);
             padding: 15px;
             border-radius: 1rem;
             font-family: monospace;
         }
+
+        .highlight-text { color: #eab308; } /* Giallo per i punti chiave */
     </style>
 </head>
 <body class="flex flex-col items-center p-6 min-h-screen">
 
     <header class="text-center mt-10 mb-10">
-        <h1 class="text-6xl font-black italic text-emerald-400 tracking-tighter uppercase leading-none">Wave</h1>
-        <p class="text-emerald-500/50 font-light tracking-[0.4em] uppercase text-[9px] italic mt-2">Neural Intelligence Interface</p>
+        <h1 class="text-6xl font-black italic text-white tracking-tighter uppercase leading-none">
+            Wave <span class="text-[#00d4ff]">Burn</span>
+        </h1>
+        <p class="text-[#00d4ff]/50 font-light tracking-[0.4em] uppercase text-[9px] italic mt-2">Powered by Sol Incinerator Protocol</p>
     </header>
 
-    <div class="risk-terminal text-emerald-400 font-mono text-xs mb-8">
-        <div class="flex justify-between mb-6 border-b border-emerald-900 pb-2 italic text-[9px]">
-            <span>[ NEURAL RISK ENGINE v2.5 ]</span>
-            <span class="animate-pulse">● READY</span>
+    <div class="risk-terminal text-[#00d4ff] font-mono text-xs mb-8">
+        <div class="flex justify-between mb-6 border-b border-blue-900 pb-2 italic text-[9px]">
+            <span>[ SOL RECLAMATION ENGINE v1.0 ]</span>
+            <span class="animate-pulse text-yellow-500">● SCANNING WALLET</span>
         </div>
         <div class="space-y-6">
-            <div class="flex justify-between items-center">
-                <span class="uppercase opacity-70 tracking-widest">Balance (SOL):</span>
-                <input type="number" id="capitale" class="bg-black border border-emerald-900 text-emerald-400 p-2 rounded w-28 text-right font-bold text-lg outline-none" value="10">
+            <div class="text-center mb-4 text-white text-[10px] uppercase tracking-widest">
+                Recover SOL from <span class="highlight-text">Scam Tokens</span> & <span class="highlight-text">Empty Accounts</span>
             </div>
+            
             <div class="flex gap-2">
-                <button onclick="setStrategy('blue', 1)" id="btn-blue" class="strategy-btn">Blue</button>
-                <button onclick="setStrategy('solid', 2)" id="btn-solid" class="strategy-btn active">Solid</button>
-                <button onclick="setStrategy('degen', 5)" id="btn-degen" class="strategy-btn">Degen</button>
+                <div class="strategy-btn active">Trustless</div>
+                <div class="strategy-btn active">Instant</div>
+                <div class="strategy-btn active">Verified</div>
             </div>
-            <div class="pt-6 border-t border-emerald-900 flex justify-between items-center">
-                <div class="flex flex-col">
-                    <span class="text-white font-black italic uppercase text-sm leading-none">Safe Allocation:</span>
-                    <span class="text-[9px] opacity-40 uppercase mt-1">Prudent Protocol Applied</span>
-                </div>
-                <span id="risultato" class="text-emerald-400 text-3xl font-black tracking-tighter underline leading-none">0.200 SOL</span>
+
+            <div class="pt-6 border-t border-blue-900 flex flex-col items-center gap-2">
+                <span class="text-white font-black italic uppercase text-sm">Estimated Reclaimable:</span>
+                <span id="risultato" class="text-yellow-400 text-4xl font-black tracking-tighter underline leading-none">CHECK NOW</span>
             </div>
         </div>
     </div>
 
     <div class="w-full max-w-[420px] mb-8 report-terminal">
         <div class="flex justify-between items-center mb-3">
-            <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest">Live Intelligence</span>
-            <span id="last-update" class="text-[8px] text-emerald-500/50 uppercase">Syncing...</span>
+            <span class="text-[10px] text-[#00d4ff] font-bold uppercase tracking-widest">Protocol Status</span>
+            <span id="last-update" class="text-[8px] text-blue-500/50 uppercase">LIVE</span>
         </div>
-        <div id="report-text" class="text-[11px] text-emerald-100/80 leading-relaxed italic">
-            Inizializzazione connessione neurale...
+        <div id="report-text" class="text-[11px] text-blue-100/80 leading-relaxed italic">
+            > Analyzing wallet dust...<br>
+            > Detected closed account rent available for reclaim.<br>
+            > Use the terminal below to start the incineration process.
         </div>
     </div>
 
     <div class="w-full max-w-[420px] space-y-6 mb-12">
-        <a id="jupiter-link" href="#" target="_blank" class="neural-button">
-            Terminal Swap →
+        <a id="incinerator-link" href="https://sol-incinerator.com/?ref=6jnqifx3" target="_blank" class="neural-button">
+            Launch Incinerator →
         </a>
 
-        <a href="https://dub.sh/WAVEPortal" target="_blank" class="block w-full py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 font-bold text-center text-xs uppercase italic tracking-widest hover:bg-emerald-500/20 transition-all">
-            [ Access WAVE Portal ]
+        <p class="text-[9px] text-center text-blue-400/50 uppercase tracking-[0.2em]">
+            Wave Project safe redirect to verified protocol
+        </p>
+
+        <a href="https://sol-incinerator.com/?ref=6jnqifx3" target="_blank" class="block w-full py-4 bg-blue-500/10 border border-blue-500/30 rounded-2xl text-white font-bold text-center text-xs uppercase italic tracking-widest hover:bg-blue-500/20 transition-all">
+            [ Clean Dust & Get SOL ]
         </a>
     </div>
 
-    <script>
-        const REF_ACCOUNT = "BVWRM1aANKbGNsJvijNG4HEU2GtDfGhU3xjf4NYqoSPa";
-        let currentRisk = 2;
+    <footer class="text-[8px] text-blue-900 uppercase font-bold tracking-widest">
+        © 2026 WAVE PROJECT | WAVEPROJECT.SITE
+    </footer>
 
-        async function fetchWaveReport() {
-            // URL raw del tuo file data.json
-            const reportUrl = 'https://raw.githubusercontent.com/bellucomatteo1987-cpu/wave-portal/main/data.json';
-            
-            try {
-                // Aggiungiamo un timestamp alla richiesta per forzare il browser a scaricare i dati nuovi
-                const response = await fetch(`${reportUrl}?t=${new Date().getTime()}`);
-                if (!response.ok) throw new Error('Network response was not ok');
-                
-                const data = await response.json();
-                
-                // Visualizzazione dati se presenti, altrimenti messaggio di errore
-                if (data.report_text) {
-                    document.getElementById('last-update').innerText = `Updated: ${data.last_update}`;
-                    document.getElementById('report-text').innerText = data.report_text;
-                } else {
-                    document.getElementById('report-text').innerText = "Data stream corrupted.";
-                }
-            } catch (e) {
-                console.error("Fetch error:", e);
-                document.getElementById('report-text').innerText = "Terminal Offline: Check back shortly.";
-            }
-        }
-
-        function updateJupiterLink() {
-            const baseUrl = "https://jup.ag/swap/SOL-USDC";
-            const params = `?feeBps=100&referrer=${REF_ACCOUNT}`;
-            document.getElementById('jupiter-link').href = baseUrl + params;
-        }
-
-        function calculate() {
-            const cap = parseFloat(document.getElementById('capitale').value) || 0;
-            const res = (cap * (currentRisk / 100)).toFixed(3);
-            document.getElementById('risultato').innerText = `${res} SOL`;
-            updateJupiterLink();
-        }
-
-        function setStrategy(name, percent) {
-            currentRisk = percent;
-            document.querySelectorAll('.strategy-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-'+name).classList.add('active');
-            calculate();
-        }
-
-        document.getElementById('capitale').addEventListener('input', calculate);
-        
-        // Inizializzazione automatica
-        updateJupiterLink();
-        calculate();
-        fetchWaveReport(); 
-    </script>
 </body>
 </html>
+ 
