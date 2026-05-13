@@ -1,4 +1,4 @@
-            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -44,5 +44,83 @@
         }
         
         .report-terminal {
-            background: rgba(0, 212, 255, 0.
-                             
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px dashed rgba(0, 212, 255, 0.3);
+            padding: 15px;
+            border-radius: 1rem;
+            font-family: monospace;
+        }
+
+        .highlight-text { color: #eab308; }
+        .explanation-text { color: #00d4ff; font-size: 11px; line-height: 1.5; text-align: left; }
+    </style>
+</head>
+<body class="flex flex-col items-center p-6 min-h-screen">
+
+    <header class="text-center mt-10 mb-10">
+        <h1 class="text-6xl font-black italic text-white tracking-tighter uppercase leading-none">
+            Wave <span class="text-[#00d4ff]">Burn</span>
+        </h1>
+        <p class="text-[#00d4ff]/50 font-light tracking-[0.4em] uppercase text-[9px] italic mt-2">Powered by Sol Incinerator Protocol</p>
+    </header>
+
+    <div class="risk-terminal text-[#00d4ff] font-mono text-xs mb-8">
+        <div class="flex justify-between mb-6 border-b border-blue-900 pb-2 italic text-[9px]">
+            <span>[ RENT RECOVERY ENGINE v1.1 ]</span>
+            <span class="text-green-500">● SYSTEM ONLINE</span>
+        </div>
+        <div class="space-y-6">
+            <div class="explanation-text bg-blue-500/10 p-4 rounded-lg border border-blue-500/20 italic">
+                <span class="font-bold text-white uppercase">[RENT EXPLAINED]:</span><br>
+                To exist on the Solana network, every token account requires a small <span class="highlight-text">SOL deposit</span> (Rent). When you close unused or empty accounts, this deposit is <span class="highlight-text">immediately refunded</span> to your wallet.
+            </div>
+            
+            <div class="text-center mb-4 text-white text-[10px] uppercase tracking-widest font-bold">
+                Reclaim your SOL from <span class="highlight-text">Token Dust</span>
+            </div>
+            
+            <div class="flex gap-2">
+                <div class="strategy-btn active">Refund Rent</div>
+                <div class="strategy-btn active">Burn Scams</div>
+                <div class="strategy-btn active">Instant SOL</div>
+            </div>
+
+            <div class="pt-6 border-t border-blue-900 flex flex-col items-center gap-2">
+                <span class="text-white font-black italic uppercase text-[10px] tracking-widest">Typical Recovery:</span>
+                <span class="text-yellow-400 text-3xl font-black tracking-tighter leading-none">~0.002 SOL / Airdrop</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full max-w-[420px] mb-8 report-terminal">
+        <div class="flex justify-between items-center mb-3">
+            <span class="text-[10px] text-[#00d4ff] font-bold uppercase tracking-widest">Security Status</span>
+            <span class="text-[8px] text-blue-500/50 uppercase">Verified Site</span>
+        </div>
+        <div class="text-[11px] text-blue-100/80 leading-relaxed italic">
+            > Ready to reclaim your locked SOL deposits.<br>
+            > Trusted by the Solana community for wallet cleanup.<br>
+            > Your main SOL balance and NFTs are 100% safe.
+        </div>
+    </div>
+
+    <div class="w-full max-w-[420px] space-y-6 mb-12">
+        <a id="incinerator-link" href="https://sol-incinerator.com/?ref=6jnqifx3" target="_blank" class="neural-button">
+            Reclaim Your Rent →
+        </a>
+
+        <p class="text-[9px] text-center text-blue-400/50 uppercase tracking-[0.2em]">
+            Official Redirect to waveproject.site Verified Protocol
+        </p>
+
+        <a href="https://sol-incinerator.com/?ref=6jnqifx3" target="_blank" class="block w-full py-4 bg-blue-500/10 border border-blue-500/30 rounded-2xl text-white font-bold text-center text-xs uppercase italic tracking-widest hover:bg-blue-500/20 transition-all">
+            [ Start Cleaning & Collect SOL ]
+        </a>
+    </div>
+
+    <footer class="text-[8px] text-blue-900 uppercase font-bold tracking-widest">
+        © 2026 WAVE PROJECT | WAVEPROJECT.SITE
+    </footer>
+
+</body>
+</html>
