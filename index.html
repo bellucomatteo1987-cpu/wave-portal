@@ -3,39 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAVE | SOL Reclaimer</title>
+    <title>WAVE | SOL Rent Reclaimer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
-        /* Palette Wave: Azzurro #00d4ff, Bianco #fff, Sfondo scuro */
         body { background-color: #050b14; font-family: 'Space Grotesk', sans-serif; margin: 0; color: white; }
         
-        /* Glow Azzurro per Wave */
         .wave-glow { border: 1px solid rgba(0, 212, 255, 0.4); box-shadow: 0 0 30px rgba(0, 212, 255, 0.15); }
         
-        /* Terminale con bordi Azzurri */
         .risk-terminal { 
             background: linear-gradient(145deg, rgba(10, 20, 30, 0.98), rgba(5, 11, 20, 0.95)); 
             border: 1px solid #00d4ff; padding: 24px; border-radius: 1.5rem; 
             width: 100%; max-width: 420px;
         }
 
-        /* Bottoni Strategia - Mix Giallo/Verde di Sol Incinerator */
         .strategy-btn {
             border: 1px solid #00d4ff; padding: 10px; border-radius: 8px; 
             font-size: 11px; cursor: pointer; background: transparent; color: #00d4ff;
             font-weight: bold; flex: 1; text-align: center; transition: 0.3s;
         }
         .strategy-btn.active { 
-            background: #eab308; /* Giallo Sol Incinerator */
+            background: #eab308; 
             color: #000; 
             border-color: #eab308;
             box-shadow: 0 0 15px rgba(234, 179, 8, 0.4); 
         }
 
-        /* Bottone Principale - Verde/Giallo Sol Incinerator con stile Wave */
         .neural-button {
-            background: linear-gradient(90deg, #22c55e, #eab308); /* Verde a Giallo */
+            background: linear-gradient(90deg, #22c55e, #eab308);
             color: #000; font-weight: 900;
             padding: 18px; border-radius: 1rem; width: 100%; max-width: 420px;
             text-align: center; text-transform: uppercase; font-style: italic;
@@ -56,7 +51,8 @@
             font-family: monospace;
         }
 
-        .highlight-text { color: #eab308; } /* Giallo per i punti chiave */
+        .highlight-text { color: #eab308; }
+        .explanation-text { color: #00d4ff; font-size: 10px; line-height: 1.4; }
     </style>
 </head>
 <body class="flex flex-col items-center p-6 min-h-screen">
@@ -70,50 +66,55 @@
 
     <div class="risk-terminal text-[#00d4ff] font-mono text-xs mb-8">
         <div class="flex justify-between mb-6 border-b border-blue-900 pb-2 italic text-[9px]">
-            <span>[ SOL RECLAMATION ENGINE v1.0 ]</span>
-            <span class="animate-pulse text-yellow-500">● SCANNING WALLET</span>
+            <span>[ RENT RECOVERY ENGINE v1.1 ]</span>
+            <span class="animate-pulse text-yellow-500">● READY TO SCAN</span>
         </div>
         <div class="space-y-6">
-            <div class="text-center mb-4 text-white text-[10px] uppercase tracking-widest">
-                Recover SOL from <span class="highlight-text">Scam Tokens</span> & <span class="highlight-text">Empty Accounts</span>
+            <div class="explanation-text bg-blue-500/10 p-3 rounded-lg border border-blue-500/20 italic">
+                <span class="font-bold text-white uppercase">[HOW IT WORKS]:</span><br>
+                Every token account on Solana requires a small <span class="highlight-text">SOL deposit</span> to "rent" space on the network. If you have empty accounts or scam tokens, you can close them to <span class="highlight-text">reclaim your rent money</span> instantly.
+            </div>
+            
+            <div class="text-center mb-4 text-white text-[10px] uppercase tracking-widest font-bold">
+                Get your <span class="highlight-text">SOL Cash-back</span> from dust
             </div>
             
             <div class="flex gap-2">
-                <div class="strategy-btn active">Trustless</div>
-                <div class="strategy-btn active">Instant</div>
-                <div class="strategy-btn active">Verified</div>
+                <div class="strategy-btn active">Refund Rent</div>
+                <div class="strategy-btn active">Burn Scam</div>
+                <div class="strategy-btn active">Earn SOL</div>
             </div>
 
             <div class="pt-6 border-t border-blue-900 flex flex-col items-center gap-2">
-                <span class="text-white font-black italic uppercase text-sm">Estimated Reclaimable:</span>
-                <span id="risultato" class="text-yellow-400 text-4xl font-black tracking-tighter underline leading-none">CHECK NOW</span>
+                <span class="text-white font-black italic uppercase text-sm">Collectable Rent:</span>
+                <span id="risultato" class="text-yellow-400 text-4xl font-black tracking-tighter underline leading-none">SCAN NOW</span>
             </div>
         </div>
     </div>
 
     <div class="w-full max-w-[420px] mb-8 report-terminal">
         <div class="flex justify-between items-center mb-3">
-            <span class="text-[10px] text-[#00d4ff] font-bold uppercase tracking-widest">Protocol Status</span>
-            <span id="last-update" class="text-[8px] text-blue-500/50 uppercase">LIVE</span>
+            <span class="text-[10px] text-[#00d4ff] font-bold uppercase tracking-widest">Security Check</span>
+            <span id="last-update" class="text-[8px] text-blue-500/50 uppercase">Verified Site</span>
         </div>
         <div id="report-text" class="text-[11px] text-blue-100/80 leading-relaxed italic">
-            > Analyzing wallet dust...<br>
-            > Detected closed account rent available for reclaim.<br>
-            > Use the terminal below to start the incineration process.
+            > Each closed account returns ~0.002 SOL.<br>
+            > Safe connection: Only closes empty/selected accounts.<br>
+            > Your main SOL balance is never at risk.
         </div>
     </div>
 
     <div class="w-full max-w-[420px] space-y-6 mb-12">
         <a id="incinerator-link" href="https://sol-incinerator.com/?ref=6jnqifx3" target="_blank" class="neural-button">
-            Launch Incinerator →
+            Reclaim Your Rent →
         </a>
 
         <p class="text-[9px] text-center text-blue-400/50 uppercase tracking-[0.2em]">
-            Wave Project safe redirect to verified protocol
+            Official Redirect to waveproject.site Verified Partner
         </p>
 
         <a href="https://sol-incinerator.com/?ref=6jnqifx3" target="_blank" class="block w-full py-4 bg-blue-500/10 border border-blue-500/30 rounded-2xl text-white font-bold text-center text-xs uppercase italic tracking-widest hover:bg-blue-500/20 transition-all">
-            [ Clean Dust & Get SOL ]
+            [ Start Cleaning & Collect SOL ]
         </a>
     </div>
 
@@ -123,4 +124,5 @@
 
 </body>
 </html>
+
  
