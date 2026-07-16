@@ -1,55 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAVE | CRYPTO UTILITY HUB</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <title>WAVEPROJECT.SITE | SOLANA STAKING</title>
     <style>
-        body { background-color: #050b14; font-family: 'Space Grotesk', sans-serif; color: white; }
-        .hub-card { 
-            background: rgba(10, 20, 30, 0.6); 
-            border: 1px solid #00d4ff; 
-            border-radius: 1rem; 
-            transition: 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
+        body { 
+            background-color: #0a0a1a; 
+            color: #fff; 
+            font-family: 'Courier New', monospace; 
+            margin: 0; 
+            padding: 20px;
         }
-        .hub-card:hover { border-color: #eab308; box-shadow: 0 0 20px rgba(234, 179, 8, 0.2); }
-        .utility-link { color: #00d4ff; font-weight: bold; text-decoration: none; }
-        .utility-link:hover { color: #eab308; }
+        .header { 
+            text-align: center; 
+            padding: 50px 0; 
+            background: linear-gradient(to right, #ff00ff, #00ffff); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            font-size: 3.5em; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            letter-spacing: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        .container { 
+            max-width: 900px; 
+            margin: auto; 
+            padding: 30px; 
+            border: 2px solid #00ffff; 
+            background: rgba(22, 22, 51, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 0 20px #ff00ff;
+        }
+        h2 { color: #00ffff; text-transform: uppercase; }
+        
+        /* Tabella Stile Miami */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #ff00ff; color: white; padding: 15px; text-align: left; }
+        td { border: 1px solid #444; padding: 15px; background: rgba(255,255,255,0.05); }
+        
+        .btn { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            background: #00ffff; 
+            color: #0a0a1a; 
+            text-decoration: none; 
+            font-weight: bold; 
+            border-radius: 5px; 
+            margin-top: 20px;
+        }
+        
+        .disclaimer { 
+            font-size: 0.7em; 
+            color: #888; 
+            margin-top: 50px; 
+            border-top: 1px solid #444; 
+            padding-top: 20px; 
+            line-height: 1.5;
+        }
     </style>
 </head>
-<body class="p-6 flex flex-col items-center">
+<body>
 
-    <header class="text-center mt-10 mb-12">
-        <h1 class="text-5xl font-black italic text-white uppercase tracking-tighter">Wave <span class="text-[#00d4ff]">Utility</span></h1>
-        <p class="text-[#00d4ff]/50 tracking-[0.2em] text-[10px] uppercase mt-2">Essential tools for the 2026 crypto ecosystem</p>
-    </header>
+    <div class="header">WAVEPROJECT.SITE</div>
 
-    <div class="w-full max-w-2xl">
-        <div class="hub-card">
-            <span class="font-bold">1. SOL Incinerator</span>
-            <a href="https://sol-incinerator.com/?ref=6jnqifx3" target="_blank" class="utility-link">ACCESS TOOL →</a>
-        </div>
-        
-        <div class="hub-card">
-            <span class="font-bold">2. Ledger (Hardware Wallet)</span>
-            <a href="#" target="_blank" class="utility-link">SECURE ASSETS →</a>
-        </div>
+    <div class="container">
+        <h1>SOLANA STAKING HUB</h1>
+        <p>Prendi il controllo dei tuoi asset. Semplice, veloce, performante.</p>
 
-        <div class="hub-card">
-            <span class="font-bold">3. Koinly (Tax Reporting)</span>
-            <a href="#" target="_blank" class="utility-link">START TRACKING →</a>
+        <h2>LE 3 SCELTE TOP PER SOLANA</h2>
+        <table>
+            <tr>
+                <th>Piattaforma</th>
+                <th>Vantaggio Principale</th>
+                <th>Ideale Per</th>
+            </tr>
+            <tr>
+                <td><strong>Bitpanda</strong></td>
+                <td>Semplicità stile bancario</td>
+                <td>Neofiti assoluti</td>
+            </tr>
+            <tr>
+                <td><strong>OKX</strong></td>
+                <td>Ecosistema completo</td>
+                <td>Chi cerca trading + staking</td>
+            </tr>
+            <tr>
+                <td><strong>Phantom Wallet</strong></td>
+                <td>Controllo totale (Nativo)</td>
+                <td>Chi vuole l'esperienza pura</td>
+            </tr>
+        </table>
+
+        <a href="#" class="btn">INIZIA A STAKARE SOLANA</a>
+
+        <div class="disclaimer">
+            <strong>DISCLAIMER:</strong> Waveproject.site è una piattaforma informativa indipendente. Non siamo un servizio di custodia, non offriamo consulenza finanziaria e non abbiamo accesso ai tuoi fondi. Lo staking di Solana (SOL) comporta rischi: il valore del capitale può fluttuare significativamente. Assicurati di comprendere i termini di servizio delle piattaforme esterne (Bitpanda, OKX, ecc.) prima di procedere. Opera solo con capitali che sei disposto a perdere.
         </div>
     </div>
 
-    <footer class="mt-20 text-[8px] text-blue-900 uppercase font-bold tracking-widest text-center">
-        © 2026 WAVE PROJECT | WAVEPROJECT.SITE
-    </footer>
 </body>
 </html>
